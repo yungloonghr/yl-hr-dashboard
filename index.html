@@ -1,190 +1,85 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>人資部專案儀表板</title>
-  <style>
-    :root{
-      --bg:#f6f8fa;--card:#fff;--text:#24313d;--muted:#7c8a96;--line:#e5eaee;
-      --green:#79aa94;--green-bg:#eaf3ef;--yellow:#c69f57;--yellow-bg:#fbf3e3;
-      --red:#c97777;--red-bg:#f9eaea;--blue:#7da4bd;--blue-bg:#edf4f8;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif}
-    button,select{font:inherit}
-    .wrap{max-width:1440px;margin:auto;padding:26px}
-    .top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:20px}
-    h1{font-size:26px;margin:0 0 6px}.sub{font-size:13px;color:var(--muted)}
-    .admin-link{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 12px;text-decoration:none;color:#56636d;font-size:13px}
-    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
-    .tab{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 13px;color:#5d6a74;cursor:pointer}
-    .tab.active{background:var(--green-bg);border-color:#cadfd5;color:#3f6857;font-weight:700}
-    .grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
-    .span12{grid-column:span 12}.span7{grid-column:span 7}.span5{grid-column:span 5}.span6{grid-column:span 6}
-    .card h2{font-size:16px;margin:0 0 14px}
-    .team{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-    .person{border:1px solid #e8edf0;border-radius:14px;background:#fcfdfd;padding:14px}
-    .person-head{display:flex;gap:10px;align-items:center}
-    .avatar{width:38px;height:38px;border-radius:50%;background:#edf2f5;display:flex;align-items:center;justify-content:center;font-weight:700;color:#62727e}
-    .name{font-weight:700}.role,.mini{font-size:11px;color:var(--muted)}
-    .status{display:inline-flex;gap:6px;align-items:center;margin-top:12px;font-size:12px;padding:6px 9px;border-radius:999px;background:#f1f4f6}
-    .dot{width:9px;height:9px;border-radius:50%}.green{background:var(--green)}.red{background:var(--red)}.yellow{background:var(--yellow)}.blue{background:var(--blue)}.gray{background:#a8b1b8}
-    .focus{font-size:12px;color:#677681;margin-top:9px}
-    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-    .kpi{background:#fafbfc;border:1px solid #edf1f3;border-radius:13px;padding:14px}.kpi .label{font-size:12px;color:var(--muted)}.kpi .num{font-size:25px;font-weight:800;margin-top:4px}
-    .project{padding:15px 0;border-bottom:1px solid #eef2f4;cursor:pointer}.project:last-child{border-bottom:0}
-    .projtop{display:flex;justify-content:space-between;gap:12px}.projname{font-size:13px;font-weight:750}
-    .badge{font-size:11px;padding:4px 8px;border-radius:999px;background:var(--green-bg);color:#52715f}
-    .progress{height:8px;background:#edf1f3;border-radius:999px;overflow:hidden;margin:8px 0}.bar{height:100%;background:#8fb8a6}
-    .nodes{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.node{font-size:11px;padding:5px 8px;border-radius:999px;background:#f1f4f6;color:#74818b}.node.done{background:var(--green-bg);color:#52715f}.node.current{background:var(--yellow-bg);color:#876a32;border:1px solid #ead8b4}
-    .workrow{display:grid;grid-template-columns:90px 1fr 45px;gap:10px;align-items:center;margin:12px 0;font-size:13px}.meter{height:9px;background:#edf1f3;border-radius:999px;overflow:hidden}.meter span{display:block;height:100%;background:#92b7a6}.meter.high span{background:#d0ab69}.meter.over span{background:#d38484}
-    .adhoc{background:#fffaf2;border:1px solid #f0e2c5;border-radius:12px;padding:12px;margin-bottom:10px}.impact{font-size:11px;color:#906c39;margin-top:5px}
-    table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;color:#87949e;padding:9px 8px;border-bottom:1px solid var(--line)}td{padding:10px 8px;border-bottom:1px solid #f0f3f5}
-    .hidden{display:none!important}.back{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 11px;cursor:pointer;margin-bottom:14px}
-    .gantt-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:13px}.gantt{min-width:980px;padding:15px}.ghead,.grow{display:grid;grid-template-columns:190px repeat(8,1fr);gap:4px;align-items:center}.ghead{font-size:11px;color:var(--muted);margin-bottom:7px}.glabel{font-size:12px}.gcell{height:28px;background:#f4f6f7;border-radius:5px}.gbar{height:18px;margin-top:5px;border-radius:5px;background:#a8c7b9}.gbar.current{background:#ddbc7d}.gbar.future{background:#dce4e8}
-    @media(max-width:980px){.team{grid-template-columns:repeat(2,1fr)}.span7,.span5,.span6{grid-column:span 12}}
-    @media(max-width:640px){.wrap{padding:14px}.team,.kpis{grid-template-columns:1fr}.admin-link{width:100%;text-align:center}}
-  </style>
-</head>
-<body>
-<div class="wrap">
-  <div class="top">
-    <div><h1>人資部專案儀表板</h1><div class="sub">Project · Daily Work · Blockers · Team Status</div></div>
-    <a class="admin-link" href="admin.html">進入後台管理</a>
-  </div>
-  <div class="tabs">
-    <button class="tab active" data-view="overview">總覽</button>
-    <button class="tab" data-view="projects">專案進度</button>
-    <button class="tab" data-view="daily">今日工作</button>
-    <button class="tab" data-view="adhoc">臨時交付</button>
-    <button class="tab" data-view="blockers">卡關中心</button>
-  </div>
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>人資部專案儀表板</title>
+<style>
+:root{--bg:#f6f8fa;--card:#fff;--text:#263743;--muted:#7d8b96;--line:#e3e9ed;--green:#7eaa96;--greenbg:#eaf3ef;--yellow:#c7a25e;--yellowbg:#fff8e9;--red:#ca7a7a;--redbg:#fff2f2}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif}button,input,select,textarea{font:inherit}.wrap{max-width:1500px;margin:auto;padding:26px}
+.top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap;margin-bottom:18px}h1{font-size:26px;margin:0 0 5px}.sub,.meta{font-size:12px;color:var(--muted)}.history{border:1px solid var(--line);background:#fff;color:#586671;text-decoration:none;border-radius:10px;padding:10px 13px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.tab{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 14px;color:#5e6b75;cursor:pointer}.tab.active{background:var(--greenbg);color:#486b5b;border-color:#cee0d7;font-weight:700}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}.card h2{font-size:16px;margin:0 0 14px}.team,.today-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.person,.work-card{border:1px solid #e7ecef;border-radius:14px;padding:14px;background:#fcfdfd;min-width:0}.head{display:flex;gap:10px;align-items:center}.avatar{width:38px;height:38px;border-radius:50%;background:#edf2f5;display:flex;align-items:center;justify-content:center;font-weight:750;color:#61727e}.name{font-size:14px;font-weight:750}.role{font-size:11px;color:var(--muted)}
+.status{display:flex;align-items:center;gap:7px;margin-top:10px}.status select{width:100%;border:1px solid #dfe6ea;border-radius:9px;background:#fff;padding:8px;color:#52616c}.focus{margin-top:9px;font-size:12px;color:#697883}.dot{width:9px;height:9px;border-radius:50%;flex:none}.green{background:#74ad94}.red{background:#d27b7b}.yellow{background:#d0aa61}.blue{background:#7da5bd}.gray{background:#aab3ba}
+.work-card .work-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}.add{border:1px solid #dce5e9;background:#fff;border-radius:9px;padding:7px 9px;cursor:pointer;color:#5c6a74;font-size:12px}.task{padding:10px 0;border-bottom:1px solid #eef2f4}.task:last-child{border-bottom:0}.task-line{display:flex;gap:8px;align-items:flex-start}.check{width:18px;height:18px;border:1.5px solid #cbd6dc;border-radius:6px;background:#fff;cursor:pointer;flex:none;margin-top:1px}.check.done{background:#87ae9c;border-color:#87ae9c;color:#fff}.task-title{font-size:13px;font-weight:650;flex:1}.task-status{border:0;background:transparent;color:#788690;font-size:11px;padding:0}.adhoc-task{background:var(--yellowbg);border:1px solid #f0e1c1;border-radius:10px;padding:9px;margin-top:7px}.adhoc-task .task-title{color:#725d35}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}.s7{grid-column:span 7}.s5{grid-column:span 5}.s6{grid-column:span 6}.s12{grid-column:span 12}.project{padding:15px 0;border-bottom:1px solid #eef2f4;cursor:pointer}.project:last-child{border:0}.projtop{display:flex;justify-content:space-between;gap:10px}.projname{font-size:13px;font-weight:750}.badge{font-size:11px;background:var(--greenbg);color:#537362;padding:4px 8px;border-radius:999px}.progress{height:8px;background:#edf1f3;border-radius:99px;overflow:hidden;margin:8px 0}.bar{height:100%;background:#8fb8a6}.nodes{display:flex;gap:6px;flex-wrap:wrap}.node{font-size:11px;padding:5px 8px;border-radius:999px;background:#f1f4f6;color:#75828c}.node.done{background:var(--greenbg);color:#557362}.node.current{background:#fbf1dd;color:#866b36;border:1px solid #ead7b2}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.kpi{background:#fafbfc;border:1px solid #edf1f3;border-radius:12px;padding:13px}.kpi span{font-size:11px;color:var(--muted)}.kpi b{display:block;font-size:23px;margin-top:4px}
+table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;color:#87949e;padding:9px 8px;border-bottom:1px solid var(--line)}td{padding:10px 8px;border-bottom:1px solid #f0f3f5}.hidden{display:none!important}
+.modal-bg{position:fixed;inset:0;background:rgba(35,48,58,.28);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}.modal{background:#fff;border-radius:16px;border:1px solid var(--line);width:min(560px,100%);padding:18px}.modal h3{margin:0 0 14px;font-size:17px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:11px;color:#73818c}.field input,.field select,.field textarea{border:1px solid #dce4e8;border-radius:9px;padding:9px}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.primary{border:1px solid #789f8b;background:#789f8b;color:#fff;border-radius:9px;padding:9px 12px;cursor:pointer}.secondary{border:1px solid #dce4e8;background:#fff;border-radius:9px;padding:9px 12px;cursor:pointer}
+.gantt-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}.gantt{min-width:980px;padding:14px}.ghead,.grow{display:grid;grid-template-columns:190px repeat(8,1fr);gap:4px;align-items:center}.ghead{font-size:11px;color:var(--muted)}.glabel{font-size:12px}.gcell{height:28px;background:#f4f6f7;border-radius:5px}.gbar{height:18px;margin-top:5px;border-radius:5px;background:#a8c7b9}.gbar.current{background:#ddbc7d}.gbar.future{background:#dce4e8}
+@media(max-width:1050px){.team,.today-grid{grid-template-columns:repeat(2,1fr)}.s7,.s5,.s6{grid-column:span 12}}@media(max-width:620px){.wrap{padding:14px}.team,.today-grid,.kpis,.fields{grid-template-columns:1fr}.field.full{grid-column:auto}}
+</style></head><body><div class="wrap">
+<div class="top"><div><h1>人資部專案儀表板</h1><div class="sub">Project · Daily Work · Blockers · Team Status</div></div><a class="history" href="admin.html">紀錄・匯報中心</a></div>
+<div class="tabs"><button class="tab active" data-v="overview">總覽</button><button class="tab" data-v="projects">專案進度</button><button class="tab" data-v="adhoc">臨時交付</button><button class="tab" data-v="blockers">卡關中心</button></div>
 
-  <section id="overview" class="view">
-    <div class="grid">
-      <div class="card span12"><h2>團隊即時狀態</h2><div id="teamCards" class="team"></div></div>
-      <div class="card span12"><div id="kpiCards" class="kpis"></div></div>
-      <div class="card span7"><h2>專案進度</h2><div id="projectCards"></div></div>
-      <div class="card span5"><h2>工作負載</h2><div id="workload"></div></div>
-      <div class="card span6"><h2>今日工作</h2><div id="todayWork"></div></div>
-      <div class="card span6"><h2>⚡ 臨時交付</h2><div id="adhocPreview"></div></div>
-      <div class="card span12"><h2>卡關中心</h2><div id="blockerPreview"></div></div>
-    </div>
-  </section>
-  <section id="projects" class="view hidden"><div class="card"><h2>專案進度總覽</h2><div id="projectList"></div></div></section>
-  <section id="daily" class="view hidden"><div class="card"><h2>今日工作總覽</h2><div id="dailyTable"></div></div></section>
-  <section id="adhoc" class="view hidden"><div class="card"><h2>臨時交付任務紀錄</h2><div id="adhocTable"></div></div></section>
-  <section id="blockers" class="view hidden"><div class="card"><h2>卡關中心</h2><div id="blockerTable"></div></div></section>
-  <section id="projectDetail" class="view hidden">
-    <button class="back" id="backBtn">← 返回專案</button>
-    <div class="card"><h2 id="detailTitle"></h2><div id="detailMeta" class="sub"></div><h2 style="margin-top:22px">專案甘特圖</h2><div class="gantt-wrap"><div id="gantt" class="gantt"></div></div></div>
-  </section>
-</div>
+<section id="overview" class="view">
+<div class="card"><h2>團隊即時狀態</h2><div id="team" class="team"></div></div>
+<div class="card"><h2>今日工作</h2><div id="today" class="today-grid"></div></div>
+<div class="grid">
+<div class="card s7"><h2>專案進度</h2><div id="projectPreview"></div></div>
+<div class="card s5"><h2>今日概況</h2><div id="kpis" class="kpis"></div><div id="load" style="margin-top:14px"></div></div>
+<div class="card s6"><h2>⚡ 臨時交付</h2><div id="adhocPreview"></div></div>
+<div class="card s6"><h2>卡關中心</h2><div id="blockPreview"></div></div>
+</div></section>
+<section id="projects" class="view hidden"><div class="card"><h2>專案進度</h2><button id="addProject" class="add">＋ 新增專案</button><div id="projectList"></div></div></section>
+<section id="adhoc" class="view hidden"><div class="card"><h2>臨時交付任務</h2><button id="addAdhoc" class="add">＋ 新增臨時任務</button><div id="adhocTable"></div></div></section>
+<section id="blockers" class="view hidden"><div class="card"><h2>卡關中心</h2><button id="addBlock" class="add">＋ 新增卡關</button><div id="blockTable"></div></div></section>
+<section id="detail" class="view hidden"><button id="back" class="secondary" style="margin-bottom:12px">← 返回專案</button><div class="card"><h2 id="detailTitle"></h2><div id="detailMeta" class="sub"></div><h2 style="margin-top:22px">甘特圖</h2><div class="gantt-wrap"><div id="gantt" class="gantt"></div></div></div></section>
+</div><div id="modalRoot"></div>
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBjwYdXHp4qTdZKhh4Nd7recLkuQzJlZNs",
-  authDomain: "yl-hr-dashboard.firebaseapp.com",
-  projectId: "yl-hr-dashboard",
-  storageBucket: "yl-hr-dashboard.firebasestorage.app",
-  messagingSenderId: "563879035782",
-  appId: "1:563879035782:web:77f8fd059b23efb633e207"
+import{initializeApp}from"https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import{getFirestore,doc,onSnapshot,setDoc,serverTimestamp,collection,addDoc}from"https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+const firebaseConfig={
+ apiKey:"AIzaSyBjwYdXHp4qTdZKhh4Nd7recLkuQzJlZNs",
+ authDomain:"yl-hr-dashboard.firebaseapp.com",
+ projectId:"yl-hr-dashboard",
+ storageBucket:"yl-hr-dashboard.firebasestorage.app",
+ messagingSenderId:"563879035782",
+ appId:"1:563879035782:web:77f8fd059b23efb633e207"
 };
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const dashboardRef = doc(db, "dashboard", "main");
-
-const defaultData={
- team:[
-  {name:"柔安",role:"經理",status:"勿擾",focus:"薪酬制度確認",load:72},
-  {name:"于瑄",role:"組長",status:"可討論",focus:"8月薪資調整",load:92},
-  {name:"蓁蓁",role:"人資專員",status:"會議中",focus:"保費資料整理",load:68},
-  {name:"昱菱",role:"人資專員",status:"可討論",focus:"人事基本資料",load:55}
- ],
- projects:[
-  {id:"salary",name:"薪酬暨獎金制度重整",owner:"于瑄",progress:42,status:"正常",current:"現況分析",nodes:["資料盤點","現況分析","Pay Philosophy","方案設計","Policy V1.0"],start:"2026/09",end:"2027/12",
-   gantt:[["人事基本資料整理",0,2,"done"],["Job Validation / Family",1,3,"done"],["薪資與津貼盤點",0,3,"done"],["現況薪酬問題分析",2,4,"current"],["Pay Philosophy 決策",4,5,"future"],["Salary / Bonus 方案",5,7,"future"],["Policy V1.0",7,8,"future"]]},
-  {id:"performance",name:"115年度績效考核",owner:"柔安",progress:61,status:"注意",current:"系統調整",nodes:["表單確認","流程設計","系統調整","主管溝通","正式執行"],start:"2026/07",end:"2026/12",gantt:[["表單確認",0,2,"done"],["流程設計",1,3,"done"],["系統調整",2,5,"current"],["主管溝通",5,6,"future"],["正式執行",6,8,"future"]]},
-  {id:"iso",name:"ISO 內稽準備",owner:"蓁蓁 / 昱菱",progress:28,status:"正常",current:"缺件追蹤",nodes:["文件盤點","缺件追蹤","內稽準備","內稽執行"],start:"2026/09",end:"2026/11",gantt:[["文件盤點",0,2,"done"],["缺件追蹤",1,4,"current"],["內稽準備",4,6,"future"],["內稽執行",6,8,"future"]]},
-  {id:"recruit",name:"招募專案｜永安 / 苑裡 / 大肚",owner:"柔安 / 于瑄",progress:73,status:"延遲",current:"面試安排",nodes:["需求確認","履歷開發","面試安排","錄取簽核","到職"],start:"2026/08",end:"持續",gantt:[["需求確認",0,1,"done"],["履歷開發",0,3,"done"],["電話初篩",2,4,"done"],["面試安排",3,6,"current"],["錄取簽核",5,7,"future"],["到職追蹤",6,8,"future"]]}
- ],
- tasks:[
-  {person:"于瑄",title:"8月薪資調整",status:"進行中",priority:"高"},
-  {person:"于瑄",title:"整理各單位面試人選",status:"等待資料",priority:"中"},
-  {person:"柔安",title:"薪酬制度確認",status:"進行中",priority:"高"},
-  {person:"蓁蓁",title:"保費資料整理",status:"進行中",priority:"中"},
-  {person:"昱菱",title:"人事基本資料整理",status:"進行中",priority:"中"}
- ],
- adhoc:[
-  {title:"整理經營主管面試單位與現有人數",person:"于瑄",assigner:"科傑",time:"10:32",impact:"影響 2 件原定工作"},
-  {title:"高雄品管面試補充資料",person:"于瑄",assigner:"柔安",time:"13:15",impact:"預估占用 1 HR"}
- ],
- blockers:[
-  {title:"各單位面試人數整理",person:"于瑄",reason:"缺少最新人數資料",waiting:"各單位",days:1},
-  {title:"ISO 文件盤點",person:"蓁蓁",reason:"部分文件尚未提供",waiting:"相關單位",days:3},
-  {title:"專案PM招募",person:"柔安",reason:"候選人不足",waiting:"招募端",days:4}
- ]
-};
-let data=structuredClone(defaultData);
-
-const teamCards=document.getElementById("teamCards");
-const kpiCards=document.getElementById("kpiCards");
-const projectCards=document.getElementById("projectCards");
-const workload=document.getElementById("workload");
-const todayWork=document.getElementById("todayWork");
-const adhocPreview=document.getElementById("adhocPreview");
-const blockerPreview=document.getElementById("blockerPreview");
-const projectList=document.getElementById("projectList");
-const dailyTable=document.getElementById("dailyTable");
-const adhocTable=document.getElementById("adhocTable");
-const blockerTable=document.getElementById("blockerTable");
-const detailTitle=document.getElementById("detailTitle");
-const detailMeta=document.getElementById("detailMeta");
-const gantt=document.getElementById("gantt");
-const backBtn=document.getElementById("backBtn");
-
-const statusMap={可討論:["green","🟢 可討論"],勿擾:["red","🔴 勿擾"],會議中:["yellow","🟡 會議中"],休假:["blue","🌴 休假"],暫時離開:["gray","⚪ 暫時離開"]};
-function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+const app=initializeApp(firebaseConfig),db=getFirestore(app),ref=doc(db,"dashboard","main");
+const people=["柔安","于瑄","蓁蓁","昱菱"];
+const fallback={team:people.map((n,i)=>({name:n,role:["經理","組長","人資專員","人資專員"][i],status:"可討論",focus:"",load:50})),projects:[],tasks:[],adhoc:[],blockers:[]};
+let data=structuredClone(fallback);
+const $=id=>document.getElementById(id),esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+function statusColor(s){return s==="可討論"?"green":s==="勿擾"?"red":s==="會議中"?"yellow":s==="休假"?"blue":"gray"}
+async function save(reason,extra={}){await setDoc(ref,{...data,updatedAt:serverTimestamp()});await addDoc(collection(db,"activityLogs"),{reason,...extra,at:serverTimestamp()}).catch(()=>{})}
 function render(){
- teamCards.innerHTML=data.team.map(p=>{let s=statusMap[p.status]||statusMap["暫時離開"];return `<div class="person"><div class="person-head"><div class="avatar">${esc(p.name[0])}</div><div><div class="name">${esc(p.name)}</div><div class="role">${esc(p.role)}</div></div></div><div class="status"><span class="dot ${s[0]}"></span>${s[1]}</div><div class="focus">今日重點：${esc(p.focus)}</div></div>`}).join("");
- kpiCards.innerHTML=[["進行中專案",data.projects.length],["今日臨時任務",data.adhoc.length],["目前卡關",data.blockers.length],["本週到期",7]].map(x=>`<div class="kpi"><div class="label">${x[0]}</div><div class="num">${x[1]}</div></div>`).join("");
- const projectHTML=data.projects.map(p=>`<div class="project" data-id="${p.id}"><div class="projtop"><span class="projname">${esc(p.name)}</span><span class="badge">${p.progress}%</span></div><div class="progress"><div class="bar" style="width:${Math.max(0,Math.min(100,p.progress))}%"></div></div><div class="nodes">${p.nodes.map(n=>`<span class="node ${n===p.current?"current":p.nodes.indexOf(n)<p.nodes.indexOf(p.current)?"done":""}">${esc(n)}</span>`).join("")}</div><div class="mini" style="margin-top:8px">目前節點：${esc(p.current)} · 點擊查看甘特圖</div></div>`).join("");
- projectCards.innerHTML=projectHTML; projectList.innerHTML=projectHTML;
- workload.innerHTML=data.team.map(p=>`<div class="workrow"><span>${esc(p.name)}</span><div class="meter ${p.load>=85?"over":p.load>=65?"high":""}"><span style="width:${p.load}%"></span></div><b>${p.load}%</b></div>`).join("");
- todayWork.innerHTML=data.tasks.map(t=>`<div style="padding:10px 0;border-bottom:1px solid #f0f3f5"><b style="font-size:13px">${esc(t.title)}</b><div class="mini">${esc(t.person)} · ${esc(t.status)} · ${esc(t.priority)}優先</div></div>`).join("");
- adhocPreview.innerHTML=data.adhoc.slice(0,3).map(a=>`<div class="adhoc"><b>${esc(a.title)}</b><div class="mini">承辦：${esc(a.person)} · 交付：${esc(a.assigner)} · ${esc(a.time)}</div><div class="impact">${esc(a.impact)}</div></div>`).join("");
- blockerPreview.innerHTML=makeBlockerTable();
- dailyTable.innerHTML=`<table><thead><tr><th>人員</th><th>工作</th><th>狀態</th><th>優先</th></tr></thead><tbody>${data.tasks.map(t=>`<tr><td>${esc(t.person)}</td><td>${esc(t.title)}</td><td>${esc(t.status)}</td><td>${esc(t.priority)}</td></tr>`).join("")}</tbody></table>`;
- adhocTable.innerHTML=`<table><thead><tr><th>任務</th><th>承辦人</th><th>交付人</th><th>時間</th><th>影響</th></tr></thead><tbody>${data.adhoc.map(a=>`<tr><td>${esc(a.title)}</td><td>${esc(a.person)}</td><td>${esc(a.assigner)}</td><td>${esc(a.time)}</td><td>${esc(a.impact)}</td></tr>`).join("")}</tbody></table>`;
- blockerTable.innerHTML=makeBlockerTable();
- document.querySelectorAll(".project").forEach(el=>el.addEventListener("click",()=>showProject(el.dataset.id)));
+ $("team").innerHTML=data.team.map((p,i)=>`<div class="person"><div class="head"><div class="avatar">${esc(p.name[0])}</div><div><div class="name">${esc(p.name)}</div><div class="role">${esc(p.role)}</div></div></div><div class="status"><span class="dot ${statusColor(p.status)}"></span><select data-status="${i}">${["可討論","勿擾","會議中","休假","暫時離開"].map(x=>`<option ${x===p.status?"selected":""}>${x}</option>`).join("")}</select></div><div class="focus">今日重點：${esc(p.focus||"尚未設定")}</div></div>`).join("");
+ $("today").innerHTML=people.map(name=>{let p=data.team.find(x=>x.name===name)||{};let tasks=data.tasks.filter(x=>x.person===name);let ad=data.adhoc.filter(x=>x.person===name);return `<div class="work-card"><div class="work-head"><div><div class="name">${esc(name)}</div><div class="role">${esc(p.role||"")}</div></div><button class="add" data-add-task="${name}">＋ 工作</button></div>${tasks.length?tasks.map((t,i)=>taskHTML(t,data.tasks.indexOf(t))).join(""):'<div class="meta">今天尚未新增工作</div>'}${ad.map(a=>`<div class="adhoc-task"><div class="task-title">⚡ ${esc(a.title)}</div><div class="meta">交付：${esc(a.assigner)} · ${esc(a.time||"")}</div><div class="meta">${esc(a.impact||"")}</div></div>`).join("")}</div>`}).join("");
+ let ph=data.projects.map(projectHTML).join("")||'<div class="meta">尚未建立專案</div>';$("projectPreview").innerHTML=ph;$("projectList").innerHTML=ph;
+ $("kpis").innerHTML=[["進行中專案",data.projects.length],["今日臨時",data.adhoc.length],["目前卡關",data.blockers.length],["今日工作",data.tasks.length]].map(x=>`<div class="kpi"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("");
+ $("load").innerHTML=data.team.map(p=>`<div style="display:grid;grid-template-columns:60px 1fr 40px;gap:8px;align-items:center;margin:10px 0;font-size:12px"><span>${esc(p.name)}</span><div class="progress"><div class="bar" style="width:${p.load||0}%"></div></div><b>${p.load||0}%</b></div>`).join("");
+ $("adhocPreview").innerHTML=adhocHTML(data.adhoc.slice(0,4));$("blockPreview").innerHTML=blockHTML(data.blockers.slice(0,4));$("adhocTable").innerHTML=adhocHTML(data.adhoc);$("blockTable").innerHTML=blockHTML(data.blockers);
+ bind();
 }
-function makeBlockerTable(){return `<table><thead><tr><th>事項</th><th>負責人</th><th>卡關原因</th><th>等待</th><th>天數</th></tr></thead><tbody>${data.blockers.map(b=>`<tr><td>${esc(b.title)}</td><td>${esc(b.person)}</td><td>${esc(b.reason)}</td><td>${esc(b.waiting)}</td><td>${b.days}</td></tr>`).join("")}</tbody></table>`}
-function showView(id){document.querySelectorAll(".view").forEach(v=>v.classList.add("hidden"));document.getElementById(id).classList.remove("hidden")}
-function showProject(id){const p=data.projects.find(x=>x.id===id);if(!p)return;detailTitle.textContent=p.name;detailMeta.textContent=`Owner：${p.owner} · 專案期間：${p.start}–${p.end} · 目前節點：${p.current}`;let h='<div class="ghead"><div></div><div>9月</div><div>10月</div><div>11月</div><div>12月</div><div>1月</div><div>2月</div><div>3月</div><div>4月</div></div>';p.gantt.forEach(r=>{h+=`<div class="grow"><div class="glabel">${esc(r[0])}</div>`;for(let i=0;i<8;i++){if(i===r[1]){h+=`<div class="gcell" style="grid-column:span ${r[2]-r[1]}"><div class="gbar ${r[3]}"></div></div>`;i=r[2]-1}else h+='<div class="gcell"></div>'}h+='</div>'});gantt.innerHTML=h;showView("projectDetail")}
-document.querySelectorAll(".tab").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));btn.classList.add("active");showView(btn.dataset.view)}));
-backBtn.addEventListener("click",()=>showView("projects"));
-render();
-
-onSnapshot(dashboardRef,(snap)=>{
-  if(snap.exists()){
-    const remote=snap.data();
-    data={
-      team:Array.isArray(remote.team)?remote.team:defaultData.team,
-      projects:Array.isArray(remote.projects)?remote.projects:defaultData.projects,
-      tasks:Array.isArray(remote.tasks)?remote.tasks:defaultData.tasks,
-      adhoc:Array.isArray(remote.adhoc)?remote.adhoc:defaultData.adhoc,
-      blockers:Array.isArray(remote.blockers)?remote.blockers:defaultData.blockers
-    };
-    render();
-  }
-},(error)=>{
-  console.error("Firestore 即時同步失敗：",error);
-});
-</script>
-</body>
-</html>
+function taskHTML(t,i){return `<div class="task"><div class="task-line"><button class="check ${t.status==="已完成"?"done":""}" data-done="${i}">${t.status==="已完成"?"✓":""}</button><div style="flex:1"><div class="task-title">${esc(t.title)}</div><select class="task-status" data-task-status="${i}">${["未開始","進行中","等待他人","卡關","已完成"].map(x=>`<option ${x===t.status?"selected":""}>${x}</option>`).join("")}</select></div></div></div>`}
+function projectHTML(p){let ci=p.nodes?.indexOf(p.current)??-1;return `<div class="project" data-project="${p.id}"><div class="projtop"><span class="projname">${esc(p.name)}</span><span class="badge">${p.progress||0}%</span></div><div class="progress"><div class="bar" style="width:${p.progress||0}%"></div></div><div class="nodes">${(p.nodes||[]).map((n,i)=>`<span class="node ${i<ci?"done":i===ci?"current":""}">${esc(n)}</span>`).join("")}</div><div class="meta" style="margin-top:7px">目前節點：${esc(p.current||"未設定")} · 點擊查看甘特圖</div></div>`}
+function adhocHTML(arr){return arr.length?`<table><thead><tr><th>任務</th><th>承辦</th><th>交付人</th><th>影響</th></tr></thead><tbody>${arr.map(a=>`<tr><td>${esc(a.title)}</td><td>${esc(a.person)}</td><td>${esc(a.assigner)}</td><td>${esc(a.impact)}</td></tr>`).join("")}</tbody></table>`:'<div class="meta">目前沒有臨時任務</div>'}
+function blockHTML(arr){return arr.length?`<table><thead><tr><th>事項</th><th>負責人</th><th>原因</th><th>等待</th></tr></thead><tbody>${arr.map(b=>`<tr><td>${esc(b.title)}</td><td>${esc(b.person)}</td><td>${esc(b.reason)}</td><td>${esc(b.waiting)}</td></tr>`).join("")}</tbody></table>`:'<div class="meta">目前沒有卡關事項</div>'}
+function bind(){
+ document.querySelectorAll("[data-status]").forEach(x=>x.onchange=async()=>{data.team[+x.dataset.status].status=x.value;await save("status_change",{person:data.team[+x.dataset.status].name,status:x.value});render()});
+ document.querySelectorAll("[data-add-task]").forEach(x=>x.onclick=()=>taskModal(x.dataset.addTask));
+ document.querySelectorAll("[data-done]").forEach(x=>x.onclick=async()=>{let t=data.tasks[+x.dataset.done];t.status=t.status==="已完成"?"進行中":"已完成";await save("task_status",{person:t.person,title:t.title,status:t.status});render()});
+ document.querySelectorAll("[data-task-status]").forEach(x=>x.onchange=async()=>{let t=data.tasks[+x.dataset.taskStatus];t.status=x.value;await save("task_status",{person:t.person,title:t.title,status:t.status});render()});
+ document.querySelectorAll("[data-project]").forEach(x=>x.onclick=e=>{if(e.target.closest("select,button"))return;showProject(x.dataset.project)});
+}
+function modal(title,body,onSave){$("modalRoot").innerHTML=`<div class="modal-bg"><div class="modal"><h3>${title}</h3><form id="modalForm">${body}<div class="actions"><button type="button" class="secondary" id="cancel">取消</button><button class="primary">儲存</button></div></form></div></div>`;$("cancel").onclick=()=>$("modalRoot").innerHTML="";$("modalForm").onsubmit=async e=>{e.preventDefault();await onSave(new FormData(e.target));$("modalRoot").innerHTML="";render()}}
+function taskModal(person){modal(`新增今日工作｜${person}`,`<div class="fields"><div class="field full"><label>工作內容</label><input name="title" required></div><div class="field"><label>狀態</label><select name="status"><option>未開始</option><option selected>進行中</option><option>等待他人</option><option>卡關</option></select></div><div class="field"><label>優先度</label><select name="priority"><option>高</option><option selected>中</option><option>低</option></select></div></div>`,async f=>{let t={person,title:f.get("title"),status:f.get("status"),priority:f.get("priority"),date:new Date().toISOString().slice(0,10)};data.tasks.push(t);await save("task_created",t)})}
+$("addAdhoc").onclick=()=>modal("新增臨時交付",`<div class="fields"><div class="field"><label>承辦人</label><select name="person">${people.map(x=>`<option>${x}</option>`)}</select></div><div class="field"><label>交付人</label><input name="assigner" required></div><div class="field full"><label>臨時任務</label><input name="title" required></div><div class="field"><label>交付時間</label><input name="time" type="time"></div><div class="field"><label>影響原工作</label><input name="impact" placeholder="例如：影響薪資調整進度"></div></div>`,async f=>{let a=Object.fromEntries(f);a.date=new Date().toISOString().slice(0,10);data.adhoc.push(a);await save("adhoc_created",a)});
+$("addBlock").onclick=()=>modal("新增卡關事項",`<div class="fields"><div class="field"><label>負責人</label><select name="person">${people.map(x=>`<option>${x}</option>`)}</select></div><div class="field"><label>事項</label><input name="title" required></div><div class="field"><label>卡關原因</label><input name="reason"></div><div class="field"><label>等待對象</label><input name="waiting"></div></div>`,async f=>{let b=Object.fromEntries(f);b.date=new Date().toISOString().slice(0,10);data.blockers.push(b);await save("blocker_created",b)});
+$("addProject").onclick=()=>modal("新增專案",`<div class="fields"><div class="field full"><label>專案名稱</label><input name="name" required></div><div class="field"><label>Owner</label><input name="owner"></div><div class="field"><label>進度 %</label><input name="progress" type="number" min="0" max="100" value="0"></div><div class="field full"><label>節點（逗號分隔）</label><input name="nodes" placeholder="資料盤點, 現況分析, 方案設計, 核准"></div><div class="field"><label>目前節點</label><input name="current"></div></div>`,async f=>{let nodes=f.get("nodes").split(",").map(x=>x.trim()).filter(Boolean);let p={id:"p"+Date.now(),name:f.get("name"),owner:f.get("owner"),progress:+f.get("progress")||0,nodes,current:f.get("current"),gantt:[]};data.projects.push(p);await save("project_created",{name:p.name})});
+function showProject(id){let p=data.projects.find(x=>x.id===id);if(!p)return;$("detailTitle").textContent=p.name;$("detailMeta").textContent=`Owner：${p.owner||"-"} · 目前節點：${p.current||"-"} · ${p.progress||0}%`;let h='<div class="ghead"><div></div>'+["9月","10月","11月","12月","1月","2月","3月","4月"].map(x=>`<div>${x}</div>`).join("")+'</div>';(p.gantt||[]).forEach(r=>{h+=`<div class="grow"><div class="glabel">${esc(r[0])}</div>`;for(let i=0;i<8;i++){if(i===r[1]){h+=`<div class="gcell" style="grid-column:span ${r[2]-r[1]}"><div class="gbar ${r[3]}"></div></div>`;i=r[2]-1}else h+='<div class="gcell"></div>'}h+='</div>'});$("gantt").innerHTML=h||'<div class="meta">尚未設定甘特圖</div>';show("detail")}
+function show(id){document.querySelectorAll(".view").forEach(x=>x.classList.add("hidden"));$(id).classList.remove("hidden")}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");show(b.dataset.v)});
+$("back").onclick=()=>show("projects");
+onSnapshot(ref,s=>{if(s.exists()){let r=s.data();data={team:Array.isArray(r.team)?r.team:fallback.team,projects:Array.isArray(r.projects)?r.projects:[],tasks:Array.isArray(r.tasks)?r.tasks:[],adhoc:Array.isArray(r.adhoc)?r.adhoc:[],blockers:Array.isArray(r.blockers)?r.blockers:[]}}render()},e=>{console.error(e);render()});
+</script></body></html>
