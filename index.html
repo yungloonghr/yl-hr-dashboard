@@ -1,22 +1,64 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>人資部專案儀表板</title>
 <style>
-:root{--bg:#f6f8fa;--card:#fff;--text:#263743;--muted:#7d8b96;--line:#e3e9ed;--green:#7eaa96;--greenbg:#eaf3ef;--yellow:#c7a25e;--yellowbg:#fff8e9;--red:#ca7a7a;--redbg:#fff2f2}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif}button,input,select,textarea{font:inherit}.wrap{max-width:1500px;margin:auto;padding:26px}
-.top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap;margin-bottom:18px}h1{font-size:26px;margin:0 0 5px}.sub,.meta{font-size:12px;color:var(--muted)}.history{border:1px solid var(--line);background:#fff;color:#586671;text-decoration:none;border-radius:10px;padding:10px 13px}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.tab{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 14px;color:#5e6b75;cursor:pointer}.tab.active{background:var(--greenbg);color:#486b5b;border-color:#cee0d7;font-weight:700}
-.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}.card h2{font-size:16px;margin:0 0 14px}.team,.today-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.person,.work-card{border:1px solid #e7ecef;border-radius:14px;padding:14px;background:#fcfdfd;min-width:0}.head{display:flex;gap:10px;align-items:center}.avatar{width:38px;height:38px;border-radius:50%;background:#edf2f5;display:flex;align-items:center;justify-content:center;font-weight:750;color:#61727e}.name{font-size:14px;font-weight:750}.role{font-size:11px;color:var(--muted)}
-.status{display:flex;align-items:center;gap:7px;margin-top:10px}.status select{width:100%;border:1px solid #dfe6ea;border-radius:9px;background:#fff;padding:8px;color:#52616c}.focus{margin-top:9px;font-size:12px;color:#697883}.dot{width:9px;height:9px;border-radius:50%;flex:none}.green{background:#74ad94}.red{background:#d27b7b}.yellow{background:#d0aa61}.blue{background:#7da5bd}.gray{background:#aab3ba}
-.work-card .work-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}.add{border:1px solid #dce5e9;background:#fff;border-radius:9px;padding:7px 9px;cursor:pointer;color:#5c6a74;font-size:12px}.task{padding:10px 0;border-bottom:1px solid #eef2f4}.task:last-child{border-bottom:0}.task-line{display:flex;gap:8px;align-items:flex-start}.check{width:18px;height:18px;border:1.5px solid #cbd6dc;border-radius:6px;background:#fff;cursor:pointer;flex:none;margin-top:1px}.check.done{background:#87ae9c;border-color:#87ae9c;color:#fff}.task-title{font-size:13px;font-weight:650;flex:1}.task-status{border:0;background:transparent;color:#788690;font-size:11px;padding:0}.adhoc-task{background:var(--yellowbg);border:1px solid #f0e1c1;border-radius:10px;padding:9px;margin-top:7px}.adhoc-task .task-title{color:#725d35}
-.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}.s7{grid-column:span 7}.s5{grid-column:span 5}.s6{grid-column:span 6}.s12{grid-column:span 12}.project{padding:15px 0;border-bottom:1px solid #eef2f4;cursor:pointer}.project:last-child{border:0}.projtop{display:flex;justify-content:space-between;gap:10px}.projname{font-size:13px;font-weight:750}.badge{font-size:11px;background:var(--greenbg);color:#537362;padding:4px 8px;border-radius:999px}.progress{height:8px;background:#edf1f3;border-radius:99px;overflow:hidden;margin:8px 0}.bar{height:100%;background:#8fb8a6}.nodes{display:flex;gap:6px;flex-wrap:wrap}.node{font-size:11px;padding:5px 8px;border-radius:999px;background:#f1f4f6;color:#75828c}.node.done{background:var(--greenbg);color:#557362}.node.current{background:#fbf1dd;color:#866b36;border:1px solid #ead7b2}
+:root{--bg:#f6f8fa;--card:#fff;--text:#263743;--muted:#7d8b96;--line:#e3e9ed;--green:#7eaa96;--greenbg:#eaf3ef;--yellow:#c7a25e;--yellowbg:#fff8e9;--red:#ca7a7a;--redbg:#fff2f2;--blue:#7da5bd}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif}
+button,input,select,textarea{font:inherit}
+.wrap{max-width:1500px;margin:auto;padding:26px}
+.top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap;margin-bottom:18px}
+h1{font-size:26px;margin:0 0 5px}.sub,.meta{font-size:12px;color:var(--muted)}
+.history{border:1px solid var(--line);background:#fff;color:#586671;text-decoration:none;border-radius:10px;padding:10px 13px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.tab{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 14px;color:#5e6b75;cursor:pointer}
+.tab.active{background:var(--greenbg);color:#486b5b;border-color:#cee0d7;font-weight:700}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}
+.card h2{font-size:16px;margin:0 0 14px}
+.team,.today-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.person,.work-card{border:1px solid #e7ecef;border-radius:14px;padding:14px;background:#fcfdfd;min-width:0}
+.head{display:flex;gap:10px;align-items:center}.avatar{width:38px;height:38px;border-radius:50%;background:#edf2f5;display:flex;align-items:center;justify-content:center;font-weight:750;color:#61727e}
+.name{font-size:14px;font-weight:750}.role{font-size:11px;color:var(--muted)}
+.status{display:flex;align-items:center;gap:7px;margin-top:10px}.status select{width:100%;border:1px solid #dfe6ea;border-radius:9px;background:#fff;padding:8px;color:#52616c}
+.focus{margin-top:9px;font-size:12px;color:#697883}.dot{width:9px;height:9px;border-radius:50%;flex:none}.green{background:#74ad94}.red{background:#d27b7b}.yellow{background:#d0aa61}.blue{background:#7da5bd}.gray{background:#aab3ba}
+.work-card .work-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}
+.add,.secondary{border:1px solid #dce5e9;background:#fff;border-radius:9px;padding:8px 10px;cursor:pointer;color:#5c6a74;font-size:12px}
+.primary{border:1px solid #789f8b;background:#789f8b;color:#fff;border-radius:9px;padding:9px 12px;cursor:pointer}
+.dangerBtn{border:1px solid #eccfcf;background:#fff6f6;color:#a45c5c;border-radius:9px;padding:8px 10px;cursor:pointer}
+.task{padding:10px 0;border-bottom:1px solid #eef2f4}.task:last-child{border-bottom:0}
+.task-line{display:flex;gap:8px;align-items:flex-start}.check{width:18px;height:18px;border:1.5px solid #cbd6dc;border-radius:6px;background:#fff;cursor:pointer;flex:none;margin-top:1px}
+.check.done{background:#87ae9c;border-color:#87ae9c;color:#fff}.task-title{font-size:13px;font-weight:650;flex:1}.task-status{border:0;background:transparent;color:#788690;font-size:11px;padding:0}
+.adhoc-task{background:var(--yellowbg);border:1px solid #f0e1c1;border-radius:10px;padding:9px;margin-top:7px}.adhoc-task .task-title{color:#725d35}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}.s7{grid-column:span 7}.s5{grid-column:span 5}.s6{grid-column:span 6}.s12{grid-column:span 12}
+.project{padding:15px 0;border-bottom:1px solid #eef2f4}.project:last-child{border:0}
+.projtop{display:flex;justify-content:space-between;gap:10px;align-items:center}.projname{font-size:13px;font-weight:750}.proj-actions{display:flex;gap:6px;align-items:center}
+.badge{font-size:11px;background:var(--greenbg);color:#537362;padding:4px 8px;border-radius:999px}
+.progress{height:8px;background:#edf1f3;border-radius:99px;overflow:hidden;margin:8px 0}.bar{height:100%;background:#8fb8a6}
+.nodes{display:flex;gap:6px;flex-wrap:wrap}.node{font-size:11px;padding:5px 8px;border-radius:999px;background:#f1f4f6;color:#75828c}.node.done{background:var(--greenbg);color:#557362}.node.current{background:#fbf1dd;color:#866b36;border:1px solid #ead7b2}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.kpi{background:#fafbfc;border:1px solid #edf1f3;border-radius:12px;padding:13px}.kpi span{font-size:11px;color:var(--muted)}.kpi b{display:block;font-size:23px;margin-top:4px}
-table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;color:#87949e;padding:9px 8px;border-bottom:1px solid var(--line)}td{padding:10px 8px;border-bottom:1px solid #f0f3f5}.hidden{display:none!important}
-.modal-bg{position:fixed;inset:0;background:rgba(35,48,58,.28);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}.modal{background:#fff;border-radius:16px;border:1px solid var(--line);width:min(560px,100%);padding:18px}.modal h3{margin:0 0 14px;font-size:17px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:11px;color:#73818c}.field input,.field select,.field textarea{border:1px solid #dce4e8;border-radius:9px;padding:9px}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.primary{border:1px solid #789f8b;background:#789f8b;color:#fff;border-radius:9px;padding:9px 12px;cursor:pointer}.secondary{border:1px solid #dce4e8;background:#fff;border-radius:9px;padding:9px 12px;cursor:pointer}
-.gantt-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}.gantt{min-width:980px;padding:14px}.ghead,.grow{display:grid;grid-template-columns:190px repeat(8,1fr);gap:4px;align-items:center}.ghead{font-size:11px;color:var(--muted)}.glabel{font-size:12px}.gcell{height:28px;background:#f4f6f7;border-radius:5px}.gbar{height:18px;margin-top:5px;border-radius:5px;background:#a8c7b9}.gbar.current{background:#ddbc7d}.gbar.future{background:#dce4e8}
-@media(max-width:1050px){.team,.today-grid{grid-template-columns:repeat(2,1fr)}.s7,.s5,.s6{grid-column:span 12}}@media(max-width:620px){.wrap{padding:14px}.team,.today-grid,.kpis,.fields{grid-template-columns:1fr}.field.full{grid-column:auto}}
-</style></head><body><div class="wrap">
+table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;color:#87949e;padding:9px 8px;border-bottom:1px solid var(--line)}td{padding:10px 8px;border-bottom:1px solid #f0f3f5}
+.hidden{display:none!important}
+.modal-bg{position:fixed;inset:0;background:rgba(35,48,58,.28);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+.modal{background:#fff;border-radius:16px;border:1px solid var(--line);width:min(720px,100%);max-height:90vh;overflow:auto;padding:18px}
+.modal h3{margin:0 0 14px;font-size:17px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}
+.field label{font-size:11px;color:#73818c}.field input,.field select,.field textarea{border:1px solid #dce4e8;border-radius:9px;padding:9px}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.detail-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.project-info{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
+.info-box{background:#fafbfc;border:1px solid #edf1f3;border-radius:12px;padding:12px}.info-box span{font-size:11px;color:var(--muted)}.info-box b{display:block;margin-top:4px;font-size:14px}
+.node-table-wrap{overflow-x:auto}.node-table{min-width:900px}
+.node-status{font-size:11px;padding:4px 8px;border-radius:999px;background:#f1f4f6}.node-status.done{background:var(--greenbg);color:#557362}.node-status.current{background:#fbf1dd;color:#866b36}.node-status.blocked{background:var(--redbg);color:#9b5f5f}
+.gantt-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}.gantt{min-width:1100px;padding:14px}
+.ghead,.grow{display:grid;grid-template-columns:190px repeat(var(--gcols),minmax(70px,1fr));gap:4px;align-items:center}.ghead{font-size:11px;color:var(--muted)}
+.glabel{font-size:12px}.gcell{height:30px;background:#f4f6f7;border-radius:5px;position:relative}.gbar{height:18px;margin-top:6px;border-radius:5px;background:#a8c7b9}.gbar.current{background:#ddbc7d}.gbar.blocked{background:#d99a9a}.gbar.future{background:#dce4e8}
+@media(max-width:1050px){.team,.today-grid{grid-template-columns:repeat(2,1fr)}.s7,.s5,.s6{grid-column:span 12}.project-info{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.wrap{padding:14px}.team,.today-grid,.kpis,.fields,.project-info{grid-template-columns:1fr}.field.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
 <div class="top"><div><h1>人資部專案儀表板</h1><div class="sub">Project · Daily Work · Blockers · Team Status</div></div><a class="history" href="admin.html">紀錄・匯報中心</a></div>
 <div class="tabs"><button class="tab active" data-v="overview">總覽</button><button class="tab" data-v="projects">專案進度</button><button class="tab" data-v="adhoc">臨時交付</button><button class="tab" data-v="blockers">卡關中心</button></div>
 
@@ -29,11 +71,28 @@ table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;colo
 <div class="card s6"><h2>⚡ 臨時交付</h2><div id="adhocPreview"></div></div>
 <div class="card s6"><h2>卡關中心</h2><div id="blockPreview"></div></div>
 </div></section>
-<section id="projects" class="view hidden"><div class="card"><h2>專案進度</h2><button id="addProject" class="add">＋ 新增專案</button><div id="projectList"></div></div></section>
+
+<section id="projects" class="view hidden">
+<div class="card"><div class="detail-head"><div><h2>專案進度</h2><div class="sub">建立專案後，可進入專案設定節點、日期與甘特圖。</div></div><button id="addProject" class="primary">＋ 新增專案</button></div><div id="projectList"></div></div>
+</section>
+
 <section id="adhoc" class="view hidden"><div class="card"><h2>臨時交付任務</h2><button id="addAdhoc" class="add">＋ 新增臨時任務</button><div id="adhocTable"></div></div></section>
 <section id="blockers" class="view hidden"><div class="card"><h2>卡關中心</h2><button id="addBlock" class="add">＋ 新增卡關</button><div id="blockTable"></div></div></section>
-<section id="detail" class="view hidden"><button id="back" class="secondary" style="margin-bottom:12px">← 返回專案</button><div class="card"><h2 id="detailTitle"></h2><div id="detailMeta" class="sub"></div><h2 style="margin-top:22px">甘特圖</h2><div class="gantt-wrap"><div id="gantt" class="gantt"></div></div></div></section>
-</div><div id="modalRoot"></div>
+
+<section id="detail" class="view hidden">
+<button id="back" class="secondary" style="margin-bottom:12px">← 返回專案</button>
+<div class="card">
+<div class="detail-head"><div><h2 id="detailTitle"></h2><div id="detailMeta" class="sub"></div></div><div><button id="editProjectBtn" class="secondary">編輯專案</button> <button id="addNodeBtn" class="primary">＋ 新增節點</button></div></div>
+<div id="projectInfo" class="project-info"></div>
+<h2 style="margin-top:22px">專案節點</h2>
+<div class="node-table-wrap"><div id="nodeList"></div></div>
+<h2 style="margin-top:22px">甘特圖</h2>
+<div class="gantt-wrap"><div id="gantt" class="gantt"></div></div>
+</div>
+</section>
+</div>
+<div id="modalRoot"></div>
+
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 import{getFirestore,doc,onSnapshot,setDoc,serverTimestamp,collection,addDoc}from"https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
@@ -48,21 +107,47 @@ const firebaseConfig={
 const app=initializeApp(firebaseConfig),db=getFirestore(app),ref=doc(db,"dashboard","main");
 const people=["柔安","于瑄","蓁蓁","昱菱"];
 const fallback={team:people.map((n,i)=>({name:n,role:["經理","組長","人資專員","人資專員"][i],status:"可討論",focus:"",load:50})),projects:[],tasks:[],adhoc:[],blockers:[]};
-let data=structuredClone(fallback);
+let data=structuredClone(fallback),currentProjectId=null;
 const $=id=>document.getElementById(id),esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+function today(){return new Date().toISOString().slice(0,10)}
 function statusColor(s){return s==="可討論"?"green":s==="勿擾"?"red":s==="會議中"?"yellow":s==="休假"?"blue":"gray"}
 async function save(reason,extra={}){await setDoc(ref,{...data,updatedAt:serverTimestamp()});await addDoc(collection(db,"activityLogs"),{reason,...extra,at:serverTimestamp()}).catch(()=>{})}
+function projectProgress(p){
+ const ns=p.nodes||[];
+ if(!ns.length) return Number(p.progress)||0;
+ const vals=ns.map(n=>Number(n.progress)||0);
+ return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
+}
+function currentNode(p){
+ const ns=p.nodes||[];
+ return ns.find(n=>n.status==="進行中")?.name || ns.find(n=>n.status==="卡關")?.name || ns.find(n=>(Number(n.progress)||0)<100)?.name || (ns.at(-1)?.name||"未設定");
+}
+function normalizeProject(p){
+ if(!Array.isArray(p.nodes)) p.nodes=[];
+ if(p.nodes.length && typeof p.nodes[0]==="string"){
+   p.nodes=p.nodes.map((n,i)=>({id:"n"+Date.now()+i,name:n,start:"",end:"",status:n===p.current?"進行中":"未開始",progress:n===p.current?50:0}));
+ }
+ p.progress=projectProgress(p);
+ p.current=currentNode(p);
+ return p;
+}
 function render(){
+ data.projects=(data.projects||[]).map(normalizeProject);
  $("team").innerHTML=data.team.map((p,i)=>`<div class="person"><div class="head"><div class="avatar">${esc(p.name[0])}</div><div><div class="name">${esc(p.name)}</div><div class="role">${esc(p.role)}</div></div></div><div class="status"><span class="dot ${statusColor(p.status)}"></span><select data-status="${i}">${["可討論","勿擾","會議中","休假","暫時離開"].map(x=>`<option ${x===p.status?"selected":""}>${x}</option>`).join("")}</select></div><div class="focus">今日重點：${esc(p.focus||"尚未設定")}</div></div>`).join("");
- $("today").innerHTML=people.map(name=>{let p=data.team.find(x=>x.name===name)||{};let tasks=data.tasks.filter(x=>x.person===name);let ad=data.adhoc.filter(x=>x.person===name);return `<div class="work-card"><div class="work-head"><div><div class="name">${esc(name)}</div><div class="role">${esc(p.role||"")}</div></div><button class="add" data-add-task="${name}">＋ 工作</button></div>${tasks.length?tasks.map((t,i)=>taskHTML(t,data.tasks.indexOf(t))).join(""):'<div class="meta">今天尚未新增工作</div>'}${ad.map(a=>`<div class="adhoc-task"><div class="task-title">⚡ ${esc(a.title)}</div><div class="meta">交付：${esc(a.assigner)} · ${esc(a.time||"")}</div><div class="meta">${esc(a.impact||"")}</div></div>`).join("")}</div>`}).join("");
- let ph=data.projects.map(projectHTML).join("")||'<div class="meta">尚未建立專案</div>';$("projectPreview").innerHTML=ph;$("projectList").innerHTML=ph;
+ $("today").innerHTML=people.map(name=>{let p=data.team.find(x=>x.name===name)||{};let tasks=data.tasks.filter(x=>x.person===name);let ad=data.adhoc.filter(x=>x.person===name);return `<div class="work-card"><div class="work-head"><div><div class="name">${esc(name)}</div><div class="role">${esc(p.role||"")}</div></div><button class="add" data-add-task="${name}">＋ 工作</button></div>${tasks.length?tasks.map(t=>taskHTML(t,data.tasks.indexOf(t))).join(""):'<div class="meta">今天尚未新增工作</div>'}${ad.map(a=>`<div class="adhoc-task"><div class="task-title">⚡ ${esc(a.title)}</div><div class="meta">交付：${esc(a.assigner)} · ${esc(a.time||"")}</div><div class="meta">${esc(a.impact||"")}</div></div>`).join("")}</div>`}).join("");
+ let ph=data.projects.map(p=>projectHTML(p,true)).join("")||'<div class="meta">尚未建立專案</div>';
+ $("projectPreview").innerHTML=ph;
+ $("projectList").innerHTML=data.projects.map(p=>projectHTML(p,false)).join("")||'<div class="meta">尚未建立專案</div>';
  $("kpis").innerHTML=[["進行中專案",data.projects.length],["今日臨時",data.adhoc.length],["目前卡關",data.blockers.length],["今日工作",data.tasks.length]].map(x=>`<div class="kpi"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("");
  $("load").innerHTML=data.team.map(p=>`<div style="display:grid;grid-template-columns:60px 1fr 40px;gap:8px;align-items:center;margin:10px 0;font-size:12px"><span>${esc(p.name)}</span><div class="progress"><div class="bar" style="width:${p.load||0}%"></div></div><b>${p.load||0}%</b></div>`).join("");
  $("adhocPreview").innerHTML=adhocHTML(data.adhoc.slice(0,4));$("blockPreview").innerHTML=blockHTML(data.blockers.slice(0,4));$("adhocTable").innerHTML=adhocHTML(data.adhoc);$("blockTable").innerHTML=blockHTML(data.blockers);
  bind();
+ if(currentProjectId && !$("detail").classList.contains("hidden")) renderDetail();
 }
 function taskHTML(t,i){return `<div class="task"><div class="task-line"><button class="check ${t.status==="已完成"?"done":""}" data-done="${i}">${t.status==="已完成"?"✓":""}</button><div style="flex:1"><div class="task-title">${esc(t.title)}</div><select class="task-status" data-task-status="${i}">${["未開始","進行中","等待他人","卡關","已完成"].map(x=>`<option ${x===t.status?"selected":""}>${x}</option>`).join("")}</select></div></div></div>`}
-function projectHTML(p){let ci=p.nodes?.indexOf(p.current)??-1;return `<div class="project" data-project="${p.id}"><div class="projtop"><span class="projname">${esc(p.name)}</span><span class="badge">${p.progress||0}%</span></div><div class="progress"><div class="bar" style="width:${p.progress||0}%"></div></div><div class="nodes">${(p.nodes||[]).map((n,i)=>`<span class="node ${i<ci?"done":i===ci?"current":""}">${esc(n)}</span>`).join("")}</div><div class="meta" style="margin-top:7px">目前節點：${esc(p.current||"未設定")} · 點擊查看甘特圖</div></div>`}
+function projectHTML(p,compact){
+ const ns=p.nodes||[], ci=ns.findIndex(n=>n.name===p.current);
+ return `<div class="project" data-project="${p.id}"><div class="projtop"><span class="projname">${esc(p.name)}</span><div class="proj-actions"><span class="badge">${p.progress||0}%</span>${compact?"":`<button class="secondary" data-edit-project="${p.id}">編輯</button>`}</div></div><div class="progress"><div class="bar" style="width:${p.progress||0}%"></div></div><div class="nodes">${ns.map((n,i)=>`<span class="node ${n.status==="已完成"?"done":n.status==="進行中"||n.status==="卡關"?"current":""}">${esc(n.name)}</span>`).join("")}</div><div class="meta" style="margin-top:7px">目前節點：${esc(p.current||"未設定")} ${p.start||p.end?`· ${esc(p.start||"?")} ～ ${esc(p.end||"?")}`:""} · 點擊查看</div></div>`}
 function adhocHTML(arr){return arr.length?`<table><thead><tr><th>任務</th><th>承辦</th><th>交付人</th><th>影響</th></tr></thead><tbody>${arr.map(a=>`<tr><td>${esc(a.title)}</td><td>${esc(a.person)}</td><td>${esc(a.assigner)}</td><td>${esc(a.impact)}</td></tr>`).join("")}</tbody></table>`:'<div class="meta">目前沒有臨時任務</div>'}
 function blockHTML(arr){return arr.length?`<table><thead><tr><th>事項</th><th>負責人</th><th>原因</th><th>等待</th></tr></thead><tbody>${arr.map(b=>`<tr><td>${esc(b.title)}</td><td>${esc(b.person)}</td><td>${esc(b.reason)}</td><td>${esc(b.waiting)}</td></tr>`).join("")}</tbody></table>`:'<div class="meta">目前沒有卡關事項</div>'}
 function bind(){
@@ -70,16 +155,98 @@ function bind(){
  document.querySelectorAll("[data-add-task]").forEach(x=>x.onclick=()=>taskModal(x.dataset.addTask));
  document.querySelectorAll("[data-done]").forEach(x=>x.onclick=async()=>{let t=data.tasks[+x.dataset.done];t.status=t.status==="已完成"?"進行中":"已完成";await save("task_status",{person:t.person,title:t.title,status:t.status});render()});
  document.querySelectorAll("[data-task-status]").forEach(x=>x.onchange=async()=>{let t=data.tasks[+x.dataset.taskStatus];t.status=x.value;await save("task_status",{person:t.person,title:t.title,status:t.status});render()});
- document.querySelectorAll("[data-project]").forEach(x=>x.onclick=e=>{if(e.target.closest("select,button"))return;showProject(x.dataset.project)});
+ document.querySelectorAll("[data-project]").forEach(x=>x.onclick=e=>{if(e.target.closest("button"))return;showProject(x.dataset.project)});
+ document.querySelectorAll("[data-edit-project]").forEach(x=>x.onclick=e=>{e.stopPropagation();projectModal(x.dataset.editProject)});
 }
-function modal(title,body,onSave){$("modalRoot").innerHTML=`<div class="modal-bg"><div class="modal"><h3>${title}</h3><form id="modalForm">${body}<div class="actions"><button type="button" class="secondary" id="cancel">取消</button><button class="primary">儲存</button></div></form></div></div>`;$("cancel").onclick=()=>$("modalRoot").innerHTML="";$("modalForm").onsubmit=async e=>{e.preventDefault();await onSave(new FormData(e.target));$("modalRoot").innerHTML="";render()}}
-function taskModal(person){modal(`新增今日工作｜${person}`,`<div class="fields"><div class="field full"><label>工作內容</label><input name="title" required></div><div class="field"><label>狀態</label><select name="status"><option>未開始</option><option selected>進行中</option><option>等待他人</option><option>卡關</option></select></div><div class="field"><label>優先度</label><select name="priority"><option>高</option><option selected>中</option><option>低</option></select></div></div>`,async f=>{let t={person,title:f.get("title"),status:f.get("status"),priority:f.get("priority"),date:new Date().toISOString().slice(0,10)};data.tasks.push(t);await save("task_created",t)})}
-$("addAdhoc").onclick=()=>modal("新增臨時交付",`<div class="fields"><div class="field"><label>承辦人</label><select name="person">${people.map(x=>`<option>${x}</option>`)}</select></div><div class="field"><label>交付人</label><input name="assigner" required></div><div class="field full"><label>臨時任務</label><input name="title" required></div><div class="field"><label>交付時間</label><input name="time" type="time"></div><div class="field"><label>影響原工作</label><input name="impact" placeholder="例如：影響薪資調整進度"></div></div>`,async f=>{let a=Object.fromEntries(f);a.date=new Date().toISOString().slice(0,10);data.adhoc.push(a);await save("adhoc_created",a)});
-$("addBlock").onclick=()=>modal("新增卡關事項",`<div class="fields"><div class="field"><label>負責人</label><select name="person">${people.map(x=>`<option>${x}</option>`)}</select></div><div class="field"><label>事項</label><input name="title" required></div><div class="field"><label>卡關原因</label><input name="reason"></div><div class="field"><label>等待對象</label><input name="waiting"></div></div>`,async f=>{let b=Object.fromEntries(f);b.date=new Date().toISOString().slice(0,10);data.blockers.push(b);await save("blocker_created",b)});
-$("addProject").onclick=()=>modal("新增專案",`<div class="fields"><div class="field full"><label>專案名稱</label><input name="name" required></div><div class="field"><label>Owner</label><input name="owner"></div><div class="field"><label>進度 %</label><input name="progress" type="number" min="0" max="100" value="0"></div><div class="field full"><label>節點（逗號分隔）</label><input name="nodes" placeholder="資料盤點, 現況分析, 方案設計, 核准"></div><div class="field"><label>目前節點</label><input name="current"></div></div>`,async f=>{let nodes=f.get("nodes").split(",").map(x=>x.trim()).filter(Boolean);let p={id:"p"+Date.now(),name:f.get("name"),owner:f.get("owner"),progress:+f.get("progress")||0,nodes,current:f.get("current"),gantt:[]};data.projects.push(p);await save("project_created",{name:p.name})});
-function showProject(id){let p=data.projects.find(x=>x.id===id);if(!p)return;$("detailTitle").textContent=p.name;$("detailMeta").textContent=`Owner：${p.owner||"-"} · 目前節點：${p.current||"-"} · ${p.progress||0}%`;let h='<div class="ghead"><div></div>'+["9月","10月","11月","12月","1月","2月","3月","4月"].map(x=>`<div>${x}</div>`).join("")+'</div>';(p.gantt||[]).forEach(r=>{h+=`<div class="grow"><div class="glabel">${esc(r[0])}</div>`;for(let i=0;i<8;i++){if(i===r[1]){h+=`<div class="gcell" style="grid-column:span ${r[2]-r[1]}"><div class="gbar ${r[3]}"></div></div>`;i=r[2]-1}else h+='<div class="gcell"></div>'}h+='</div>'});$("gantt").innerHTML=h||'<div class="meta">尚未設定甘特圖</div>';show("detail")}
+function modal(title,body,onSave){
+ $("modalRoot").innerHTML=`<div class="modal-bg"><div class="modal"><h3>${title}</h3><form id="modalForm">${body}<div class="actions"><button type="button" class="secondary" id="cancel">取消</button><button class="primary">儲存</button></div></form></div></div>`;
+ $("cancel").onclick=()=>$("modalRoot").innerHTML="";
+ $("modalForm").onsubmit=async e=>{e.preventDefault();await onSave(new FormData(e.target));$("modalRoot").innerHTML="";render()};
+}
+function taskModal(person){modal(`新增今日工作｜${person}`,`<div class="fields"><div class="field full"><label>工作內容</label><input name="title" required></div><div class="field"><label>狀態</label><select name="status"><option>未開始</option><option selected>進行中</option><option>等待他人</option><option>卡關</option></select></div><div class="field"><label>優先度</label><select name="priority"><option>高</option><option selected>中</option><option>低</option></select></div></div>`,async f=>{let t={person,title:f.get("title"),status:f.get("status"),priority:f.get("priority"),date:today()};data.tasks.push(t);await save("task_created",t)})}
+function projectModal(id=null){
+ const p=id?data.projects.find(x=>x.id===id):null;
+ modal(p?"編輯專案":"新增專案",`<div class="fields">
+ <div class="field full"><label>專案名稱</label><input name="name" value="${esc(p?.name||"")}" required></div>
+ <div class="field"><label>Owner</label><input name="owner" value="${esc(p?.owner||"")}"></div>
+ <div class="field"><label>專案狀態</label><select name="status">${["正常","注意","延遲","暫停","完成"].map(x=>`<option ${x===(p?.status||"正常")?"selected":""}>${x}</option>`).join("")}</select></div>
+ <div class="field"><label>專案開始日</label><input name="start" type="date" value="${esc(p?.start||"")}"></div>
+ <div class="field"><label>專案結束日</label><input name="end" type="date" value="${esc(p?.end||"")}"></div>
+ <div class="field full"><label>專案說明</label><textarea name="description">${esc(p?.description||"")}</textarea></div>
+ </div>`,async f=>{
+   if(p){Object.assign(p,{name:f.get("name"),owner:f.get("owner"),status:f.get("status"),start:f.get("start"),end:f.get("end"),description:f.get("description")})}
+   else data.projects.push({id:"p"+Date.now(),name:f.get("name"),owner:f.get("owner"),status:f.get("status"),start:f.get("start"),end:f.get("end"),description:f.get("description"),nodes:[],progress:0,current:"未設定"});
+   await save(p?"project_updated":"project_created",{name:f.get("name")});
+ });
+}
+function nodeModal(nodeId=null){
+ const p=data.projects.find(x=>x.id===currentProjectId); if(!p)return;
+ const n=nodeId?p.nodes.find(x=>x.id===nodeId):null;
+ modal(n?"編輯專案節點":"新增專案節點",`<div class="fields">
+ <div class="field full"><label>節點名稱</label><input name="name" value="${esc(n?.name||"")}" required></div>
+ <div class="field"><label>開始日期</label><input name="start" type="date" value="${esc(n?.start||p.start||"")}"></div>
+ <div class="field"><label>結束日期</label><input name="end" type="date" value="${esc(n?.end||"")}"></div>
+ <div class="field"><label>狀態</label><select name="status">${["未開始","進行中","卡關","已完成"].map(x=>`<option ${x===(n?.status||"未開始")?"selected":""}>${x}</option>`).join("")}</select></div>
+ <div class="field"><label>節點進度 %</label><input name="progress" type="number" min="0" max="100" value="${n?.progress??0}"></div>
+ <div class="field"><label>負責人</label><input name="owner" value="${esc(n?.owner||"")}"></div>
+ <div class="field full"><label>備註</label><textarea name="note">${esc(n?.note||"")}</textarea></div>
+ </div>`,async f=>{
+   const obj={id:n?.id||"n"+Date.now(),name:f.get("name"),start:f.get("start"),end:f.get("end"),status:f.get("status"),progress:Math.max(0,Math.min(100,+f.get("progress")||0)),owner:f.get("owner"),note:f.get("note")};
+   if(n) Object.assign(n,obj); else p.nodes.push(obj);
+   p.nodes.sort((a,b)=>(a.start||"9999").localeCompare(b.start||"9999"));
+   normalizeProject(p);
+   await save(n?"project_node_updated":"project_node_created",{project:p.name,node:obj.name});
+ });
+}
+async function deleteNode(nodeId){
+ const p=data.projects.find(x=>x.id===currentProjectId); if(!p)return;
+ const n=p.nodes.find(x=>x.id===nodeId); if(!n)return;
+ if(!confirm(`確定刪除節點「${n.name}」嗎？`))return;
+ p.nodes=p.nodes.filter(x=>x.id!==nodeId);normalizeProject(p);await save("project_node_deleted",{project:p.name,node:n.name});render();
+}
+$("addAdhoc").onclick=()=>modal("新增臨時交付",`<div class="fields"><div class="field"><label>承辦人</label><select name="person">${people.map(x=>`<option>${x}</option>`)}</select></div><div class="field"><label>交付人</label><input name="assigner" required></div><div class="field full"><label>臨時任務</label><input name="title" required></div><div class="field"><label>交付時間</label><input name="time" type="time"></div><div class="field"><label>影響原工作</label><input name="impact"></div></div>`,async f=>{let a=Object.fromEntries(f);a.date=today();data.adhoc.push(a);await save("adhoc_created",a)});
+$("addBlock").onclick=()=>modal("新增卡關事項",`<div class="fields"><div class="field"><label>負責人</label><select name="person">${people.map(x=>`<option>${x}</option>`)}</select></div><div class="field"><label>事項</label><input name="title" required></div><div class="field"><label>卡關原因</label><input name="reason"></div><div class="field"><label>等待對象</label><input name="waiting"></div></div>`,async f=>{let b=Object.fromEntries(f);b.date=today();data.blockers.push(b);await save("blocker_created",b)});
+$("addProject").onclick=()=>projectModal();
+$("editProjectBtn").onclick=()=>projectModal(currentProjectId);
+$("addNodeBtn").onclick=()=>nodeModal();
+
+function renderDetail(){
+ const p=data.projects.find(x=>x.id===currentProjectId); if(!p)return;
+ $("detailTitle").textContent=p.name;
+ $("detailMeta").textContent=p.description||"";
+ $("projectInfo").innerHTML=`<div class="info-box"><span>Owner</span><b>${esc(p.owner||"-")}</b></div><div class="info-box"><span>專案期間</span><b>${esc(p.start||"-")} ～ ${esc(p.end||"-")}</b></div><div class="info-box"><span>目前節點</span><b>${esc(p.current||"-")}</b></div><div class="info-box"><span>整體進度</span><b>${p.progress||0}%</b></div>`;
+ const ns=p.nodes||[];
+ $("nodeList").innerHTML=ns.length?`<table class="node-table"><thead><tr><th>節點</th><th>期間</th><th>負責人</th><th>狀態</th><th>進度</th><th></th></tr></thead><tbody>${ns.map(n=>`<tr><td><b>${esc(n.name)}</b>${n.note?`<div class="meta">${esc(n.note)}</div>`:""}</td><td>${esc(n.start||"-")} ～ ${esc(n.end||"-")}</td><td>${esc(n.owner||"-")}</td><td><span class="node-status ${n.status==="已完成"?"done":n.status==="進行中"?"current":n.status==="卡關"?"blocked":""}">${esc(n.status)}</span></td><td>${n.progress||0}%</td><td><button class="secondary" data-edit-node="${n.id}">編輯</button> <button class="dangerBtn" data-del-node="${n.id}">刪除</button></td></tr>`).join("")}</tbody></table>`:'<div class="meta">尚未建立節點。請按「＋ 新增節點」設定節點名稱、開始日與結束日。</div>';
+ document.querySelectorAll("[data-edit-node]").forEach(b=>b.onclick=()=>nodeModal(b.dataset.editNode));
+ document.querySelectorAll("[data-del-node]").forEach(b=>b.onclick=()=>deleteNode(b.dataset.delNode));
+ renderGantt(p);
+}
+function parseDate(s){if(!s)return null;const [y,m,d]=s.split("-").map(Number);return new Date(Date.UTC(y,m-1,d))}
+function monthKey(d){return d.getUTCFullYear()+"-"+String(d.getUTCMonth()+1).padStart(2,"0")}
+function renderGantt(p){
+ const ns=(p.nodes||[]).filter(n=>n.start&&n.end);
+ if(!ns.length){$("gantt").innerHTML='<div class="meta">節點設定開始日與結束日後，甘特圖會自動產生。</div>';return}
+ let min=parseDate(p.start)||parseDate(ns.map(n=>n.start).sort()[0]), max=parseDate(p.end)||parseDate(ns.map(n=>n.end).sort().at(-1));
+ if(!min||!max||max<min){$("gantt").innerHTML='<div class="meta">請確認專案與節點日期設定是否正確。</div>';return}
+ let months=[],cur=new Date(Date.UTC(min.getUTCFullYear(),min.getUTCMonth(),1)),end=new Date(Date.UTC(max.getUTCFullYear(),max.getUTCMonth(),1));
+ while(cur<=end && months.length<36){months.push(new Date(cur));cur.setUTCMonth(cur.getUTCMonth()+1)}
+ $("gantt").style.setProperty("--gcols",months.length);
+ let h=`<div class="ghead"><div></div>${months.map(d=>`<div>${d.getUTCFullYear()}/${d.getUTCMonth()+1}</div>`).join("")}</div>`;
+ ns.forEach(n=>{
+   let s=parseDate(n.start),e=parseDate(n.end),si=months.findIndex(m=>monthKey(m)===monthKey(s)),ei=months.findIndex(m=>monthKey(m)===monthKey(e));
+   if(si<0||ei<0)return;
+   h+=`<div class="grow"><div class="glabel">${esc(n.name)}</div>`;
+   for(let i=0;i<months.length;i++){
+     if(i===si){h+=`<div class="gcell" style="grid-column:span ${ei-si+1}"><div class="gbar ${n.status==="進行中"?"current":n.status==="卡關"?"blocked":n.status==="已完成"?"":"future"}"></div></div>`;i=ei}
+     else h+='<div class="gcell"></div>';
+   }h+='</div>';
+ });
+ $("gantt").innerHTML=h;
+}
+function showProject(id){currentProjectId=id;renderDetail();show("detail")}
 function show(id){document.querySelectorAll(".view").forEach(x=>x.classList.add("hidden"));$(id).classList.remove("hidden")}
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");show(b.dataset.v)});
-$("back").onclick=()=>show("projects");
+$("back").onclick=()=>{currentProjectId=null;show("projects")};
 onSnapshot(ref,s=>{if(s.exists()){let r=s.data();data={team:Array.isArray(r.team)?r.team:fallback.team,projects:Array.isArray(r.projects)?r.projects:[],tasks:Array.isArray(r.tasks)?r.tasks:[],adhoc:Array.isArray(r.adhoc)?r.adhoc:[],blockers:Array.isArray(r.blockers)?r.blockers:[]}}render()},e=>{console.error(e);render()});
-</script></body></html>
+</script>
+</body></html>
