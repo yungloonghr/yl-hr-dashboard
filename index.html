@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>人資部專案儀表板</title>
+  <style>
+    :root{
+      --bg:#f6f8fa;--card:#fff;--text:#24313d;--muted:#7c8a96;--line:#e5eaee;
+      --green:#79aa94;--green-bg:#eaf3ef;--yellow:#c69f57;--yellow-bg:#fbf3e3;
+      --red:#c97777;--red-bg:#f9eaea;--blue:#7da4bd;--blue-bg:#edf4f8;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif}
+    button,select{font:inherit}
+    .wrap{max-width:1440px;margin:auto;padding:26px}
+    .top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:20px}
+    h1{font-size:26px;margin:0 0 6px}.sub{font-size:13px;color:var(--muted)}
+    .admin-link{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 12px;text-decoration:none;color:#56636d;font-size:13px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+    .tab{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 13px;color:#5d6a74;cursor:pointer}
+    .tab.active{background:var(--green-bg);border-color:#cadfd5;color:#3f6857;font-weight:700}
+    .grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+    .span12{grid-column:span 12}.span7{grid-column:span 7}.span5{grid-column:span 5}.span6{grid-column:span 6}
+    .card h2{font-size:16px;margin:0 0 14px}
+    .team{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .person{border:1px solid #e8edf0;border-radius:14px;background:#fcfdfd;padding:14px}
+    .person-head{display:flex;gap:10px;align-items:center}
+    .avatar{width:38px;height:38px;border-radius:50%;background:#edf2f5;display:flex;align-items:center;justify-content:center;font-weight:700;color:#62727e}
+    .name{font-weight:700}.role,.mini{font-size:11px;color:var(--muted)}
+    .status{display:inline-flex;gap:6px;align-items:center;margin-top:12px;font-size:12px;padding:6px 9px;border-radius:999px;background:#f1f4f6}
+    .dot{width:9px;height:9px;border-radius:50%}.green{background:var(--green)}.red{background:var(--red)}.yellow{background:var(--yellow)}.blue{background:var(--blue)}.gray{background:#a8b1b8}
+    .focus{font-size:12px;color:#677681;margin-top:9px}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .kpi{background:#fafbfc;border:1px solid #edf1f3;border-radius:13px;padding:14px}.kpi .label{font-size:12px;color:var(--muted)}.kpi .num{font-size:25px;font-weight:800;margin-top:4px}
+    .project{padding:15px 0;border-bottom:1px solid #eef2f4;cursor:pointer}.project:last-child{border-bottom:0}
+    .projtop{display:flex;justify-content:space-between;gap:12px}.projname{font-size:13px;font-weight:750}
+    .badge{font-size:11px;padding:4px 8px;border-radius:999px;background:var(--green-bg);color:#52715f}
+    .progress{height:8px;background:#edf1f3;border-radius:999px;overflow:hidden;margin:8px 0}.bar{height:100%;background:#8fb8a6}
+    .nodes{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.node{font-size:11px;padding:5px 8px;border-radius:999px;background:#f1f4f6;color:#74818b}.node.done{background:var(--green-bg);color:#52715f}.node.current{background:var(--yellow-bg);color:#876a32;border:1px solid #ead8b4}
+    .workrow{display:grid;grid-template-columns:90px 1fr 45px;gap:10px;align-items:center;margin:12px 0;font-size:13px}.meter{height:9px;background:#edf1f3;border-radius:999px;overflow:hidden}.meter span{display:block;height:100%;background:#92b7a6}.meter.high span{background:#d0ab69}.meter.over span{background:#d38484}
+    .adhoc{background:#fffaf2;border:1px solid #f0e2c5;border-radius:12px;padding:12px;margin-bottom:10px}.impact{font-size:11px;color:#906c39;margin-top:5px}
+    table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;color:#87949e;padding:9px 8px;border-bottom:1px solid var(--line)}td{padding:10px 8px;border-bottom:1px solid #f0f3f5}
+    .hidden{display:none!important}.back{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 11px;cursor:pointer;margin-bottom:14px}
+    .gantt-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:13px}.gantt{min-width:980px;padding:15px}.ghead,.grow{display:grid;grid-template-columns:190px repeat(8,1fr);gap:4px;align-items:center}.ghead{font-size:11px;color:var(--muted);margin-bottom:7px}.glabel{font-size:12px}.gcell{height:28px;background:#f4f6f7;border-radius:5px}.gbar{height:18px;margin-top:5px;border-radius:5px;background:#a8c7b9}.gbar.current{background:#ddbc7d}.gbar.future{background:#dce4e8}
+    @media(max-width:980px){.team{grid-template-columns:repeat(2,1fr)}.span7,.span5,.span6{grid-column:span 12}}
+    @media(max-width:640px){.wrap{padding:14px}.team,.kpis{grid-template-columns:1fr}.admin-link{width:100%;text-align:center}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div><h1>人資部專案儀表板</h1><div class="sub">Project · Daily Work · Blockers · Team Status</div></div>
+    <a class="admin-link" href="admin.html">進入後台管理</a>
+  </div>
+  <div class="tabs">
+    <button class="tab active" data-view="overview">總覽</button>
+    <button class="tab" data-view="projects">專案進度</button>
+    <button class="tab" data-view="daily">今日工作</button>
+    <button class="tab" data-view="adhoc">臨時交付</button>
+    <button class="tab" data-view="blockers">卡關中心</button>
+  </div>
+
+  <section id="overview" class="view">
+    <div class="grid">
+      <div class="card span12"><h2>團隊即時狀態</h2><div id="teamCards" class="team"></div></div>
+      <div class="card span12"><div id="kpiCards" class="kpis"></div></div>
+      <div class="card span7"><h2>專案進度</h2><div id="projectCards"></div></div>
+      <div class="card span5"><h2>工作負載</h2><div id="workload"></div></div>
+      <div class="card span6"><h2>今日工作</h2><div id="todayWork"></div></div>
+      <div class="card span6"><h2>⚡ 臨時交付</h2><div id="adhocPreview"></div></div>
+      <div class="card span12"><h2>卡關中心</h2><div id="blockerPreview"></div></div>
+    </div>
+  </section>
+  <section id="projects" class="view hidden"><div class="card"><h2>專案進度總覽</h2><div id="projectList"></div></div></section>
+  <section id="daily" class="view hidden"><div class="card"><h2>今日工作總覽</h2><div id="dailyTable"></div></div></section>
+  <section id="adhoc" class="view hidden"><div class="card"><h2>臨時交付任務紀錄</h2><div id="adhocTable"></div></div></section>
+  <section id="blockers" class="view hidden"><div class="card"><h2>卡關中心</h2><div id="blockerTable"></div></div></section>
+  <section id="projectDetail" class="view hidden">
+    <button class="back" id="backBtn">← 返回專案</button>
+    <div class="card"><h2 id="detailTitle"></h2><div id="detailMeta" class="sub"></div><h2 style="margin-top:22px">專案甘特圖</h2><div class="gantt-wrap"><div id="gantt" class="gantt"></div></div></div>
+  </section>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBjwYdXHp4qTdZKhh4Nd7recLkuQzJlZNs",
+  authDomain: "yl-hr-dashboard.firebaseapp.com",
+  projectId: "yl-hr-dashboard",
+  storageBucket: "yl-hr-dashboard.firebasestorage.app",
+  messagingSenderId: "563879035782",
+  appId: "1:563879035782:web:77f8fd059b23efb633e207"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const dashboardRef = doc(db, "dashboard", "main");
+
+const defaultData={
+ team:[
+  {name:"柔安",role:"經理",status:"勿擾",focus:"薪酬制度確認",load:72},
+  {name:"于瑄",role:"組長",status:"可討論",focus:"8月薪資調整",load:92},
+  {name:"蓁蓁",role:"人資專員",status:"會議中",focus:"保費資料整理",load:68},
+  {name:"昱菱",role:"人資專員",status:"可討論",focus:"人事基本資料",load:55}
+ ],
+ projects:[
+  {id:"salary",name:"薪酬暨獎金制度重整",owner:"于瑄",progress:42,status:"正常",current:"現況分析",nodes:["資料盤點","現況分析","Pay Philosophy","方案設計","Policy V1.0"],start:"2026/09",end:"2027/12",
+   gantt:[["人事基本資料整理",0,2,"done"],["Job Validation / Family",1,3,"done"],["薪資與津貼盤點",0,3,"done"],["現況薪酬問題分析",2,4,"current"],["Pay Philosophy 決策",4,5,"future"],["Salary / Bonus 方案",5,7,"future"],["Policy V1.0",7,8,"future"]]},
+  {id:"performance",name:"115年度績效考核",owner:"柔安",progress:61,status:"注意",current:"系統調整",nodes:["表單確認","流程設計","系統調整","主管溝通","正式執行"],start:"2026/07",end:"2026/12",gantt:[["表單確認",0,2,"done"],["流程設計",1,3,"done"],["系統調整",2,5,"current"],["主管溝通",5,6,"future"],["正式執行",6,8,"future"]]},
+  {id:"iso",name:"ISO 內稽準備",owner:"蓁蓁 / 昱菱",progress:28,status:"正常",current:"缺件追蹤",nodes:["文件盤點","缺件追蹤","內稽準備","內稽執行"],start:"2026/09",end:"2026/11",gantt:[["文件盤點",0,2,"done"],["缺件追蹤",1,4,"current"],["內稽準備",4,6,"future"],["內稽執行",6,8,"future"]]},
+  {id:"recruit",name:"招募專案｜永安 / 苑裡 / 大肚",owner:"柔安 / 于瑄",progress:73,status:"延遲",current:"面試安排",nodes:["需求確認","履歷開發","面試安排","錄取簽核","到職"],start:"2026/08",end:"持續",gantt:[["需求確認",0,1,"done"],["履歷開發",0,3,"done"],["電話初篩",2,4,"done"],["面試安排",3,6,"current"],["錄取簽核",5,7,"future"],["到職追蹤",6,8,"future"]]}
+ ],
+ tasks:[
+  {person:"于瑄",title:"8月薪資調整",status:"進行中",priority:"高"},
+  {person:"于瑄",title:"整理各單位面試人選",status:"等待資料",priority:"中"},
+  {person:"柔安",title:"薪酬制度確認",status:"進行中",priority:"高"},
+  {person:"蓁蓁",title:"保費資料整理",status:"進行中",priority:"中"},
+  {person:"昱菱",title:"人事基本資料整理",status:"進行中",priority:"中"}
+ ],
+ adhoc:[
+  {title:"整理經營主管面試單位與現有人數",person:"于瑄",assigner:"科傑",time:"10:32",impact:"影響 2 件原定工作"},
+  {title:"高雄品管面試補充資料",person:"于瑄",assigner:"柔安",time:"13:15",impact:"預估占用 1 HR"}
+ ],
+ blockers:[
+  {title:"各單位面試人數整理",person:"于瑄",reason:"缺少最新人數資料",waiting:"各單位",days:1},
+  {title:"ISO 文件盤點",person:"蓁蓁",reason:"部分文件尚未提供",waiting:"相關單位",days:3},
+  {title:"專案PM招募",person:"柔安",reason:"候選人不足",waiting:"招募端",days:4}
+ ]
+};
+let data=structuredClone(defaultData);
+
+const teamCards=document.getElementById("teamCards");
+const kpiCards=document.getElementById("kpiCards");
+const projectCards=document.getElementById("projectCards");
+const workload=document.getElementById("workload");
+const todayWork=document.getElementById("todayWork");
+const adhocPreview=document.getElementById("adhocPreview");
+const blockerPreview=document.getElementById("blockerPreview");
+const projectList=document.getElementById("projectList");
+const dailyTable=document.getElementById("dailyTable");
+const adhocTable=document.getElementById("adhocTable");
+const blockerTable=document.getElementById("blockerTable");
+const detailTitle=document.getElementById("detailTitle");
+const detailMeta=document.getElementById("detailMeta");
+const gantt=document.getElementById("gantt");
+const backBtn=document.getElementById("backBtn");
+
+const statusMap={可討論:["green","🟢 可討論"],勿擾:["red","🔴 勿擾"],會議中:["yellow","🟡 會議中"],休假:["blue","🌴 休假"],暫時離開:["gray","⚪ 暫時離開"]};
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+function render(){
+ teamCards.innerHTML=data.team.map(p=>{let s=statusMap[p.status]||statusMap["暫時離開"];return `<div class="person"><div class="person-head"><div class="avatar">${esc(p.name[0])}</div><div><div class="name">${esc(p.name)}</div><div class="role">${esc(p.role)}</div></div></div><div class="status"><span class="dot ${s[0]}"></span>${s[1]}</div><div class="focus">今日重點：${esc(p.focus)}</div></div>`}).join("");
+ kpiCards.innerHTML=[["進行中專案",data.projects.length],["今日臨時任務",data.adhoc.length],["目前卡關",data.blockers.length],["本週到期",7]].map(x=>`<div class="kpi"><div class="label">${x[0]}</div><div class="num">${x[1]}</div></div>`).join("");
+ const projectHTML=data.projects.map(p=>`<div class="project" data-id="${p.id}"><div class="projtop"><span class="projname">${esc(p.name)}</span><span class="badge">${p.progress}%</span></div><div class="progress"><div class="bar" style="width:${Math.max(0,Math.min(100,p.progress))}%"></div></div><div class="nodes">${p.nodes.map(n=>`<span class="node ${n===p.current?"current":p.nodes.indexOf(n)<p.nodes.indexOf(p.current)?"done":""}">${esc(n)}</span>`).join("")}</div><div class="mini" style="margin-top:8px">目前節點：${esc(p.current)} · 點擊查看甘特圖</div></div>`).join("");
+ projectCards.innerHTML=projectHTML; projectList.innerHTML=projectHTML;
+ workload.innerHTML=data.team.map(p=>`<div class="workrow"><span>${esc(p.name)}</span><div class="meter ${p.load>=85?"over":p.load>=65?"high":""}"><span style="width:${p.load}%"></span></div><b>${p.load}%</b></div>`).join("");
+ todayWork.innerHTML=data.tasks.map(t=>`<div style="padding:10px 0;border-bottom:1px solid #f0f3f5"><b style="font-size:13px">${esc(t.title)}</b><div class="mini">${esc(t.person)} · ${esc(t.status)} · ${esc(t.priority)}優先</div></div>`).join("");
+ adhocPreview.innerHTML=data.adhoc.slice(0,3).map(a=>`<div class="adhoc"><b>${esc(a.title)}</b><div class="mini">承辦：${esc(a.person)} · 交付：${esc(a.assigner)} · ${esc(a.time)}</div><div class="impact">${esc(a.impact)}</div></div>`).join("");
+ blockerPreview.innerHTML=makeBlockerTable();
+ dailyTable.innerHTML=`<table><thead><tr><th>人員</th><th>工作</th><th>狀態</th><th>優先</th></tr></thead><tbody>${data.tasks.map(t=>`<tr><td>${esc(t.person)}</td><td>${esc(t.title)}</td><td>${esc(t.status)}</td><td>${esc(t.priority)}</td></tr>`).join("")}</tbody></table>`;
+ adhocTable.innerHTML=`<table><thead><tr><th>任務</th><th>承辦人</th><th>交付人</th><th>時間</th><th>影響</th></tr></thead><tbody>${data.adhoc.map(a=>`<tr><td>${esc(a.title)}</td><td>${esc(a.person)}</td><td>${esc(a.assigner)}</td><td>${esc(a.time)}</td><td>${esc(a.impact)}</td></tr>`).join("")}</tbody></table>`;
+ blockerTable.innerHTML=makeBlockerTable();
+ document.querySelectorAll(".project").forEach(el=>el.addEventListener("click",()=>showProject(el.dataset.id)));
+}
+function makeBlockerTable(){return `<table><thead><tr><th>事項</th><th>負責人</th><th>卡關原因</th><th>等待</th><th>天數</th></tr></thead><tbody>${data.blockers.map(b=>`<tr><td>${esc(b.title)}</td><td>${esc(b.person)}</td><td>${esc(b.reason)}</td><td>${esc(b.waiting)}</td><td>${b.days}</td></tr>`).join("")}</tbody></table>`}
+function showView(id){document.querySelectorAll(".view").forEach(v=>v.classList.add("hidden"));document.getElementById(id).classList.remove("hidden")}
+function showProject(id){const p=data.projects.find(x=>x.id===id);if(!p)return;detailTitle.textContent=p.name;detailMeta.textContent=`Owner：${p.owner} · 專案期間：${p.start}–${p.end} · 目前節點：${p.current}`;let h='<div class="ghead"><div></div><div>9月</div><div>10月</div><div>11月</div><div>12月</div><div>1月</div><div>2月</div><div>3月</div><div>4月</div></div>';p.gantt.forEach(r=>{h+=`<div class="grow"><div class="glabel">${esc(r[0])}</div>`;for(let i=0;i<8;i++){if(i===r[1]){h+=`<div class="gcell" style="grid-column:span ${r[2]-r[1]}"><div class="gbar ${r[3]}"></div></div>`;i=r[2]-1}else h+='<div class="gcell"></div>'}h+='</div>'});gantt.innerHTML=h;showView("projectDetail")}
+document.querySelectorAll(".tab").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));btn.classList.add("active");showView(btn.dataset.view)}));
+backBtn.addEventListener("click",()=>showView("projects"));
+render();
+
+onSnapshot(dashboardRef,(snap)=>{
+  if(snap.exists()){
+    const remote=snap.data();
+    data={
+      team:Array.isArray(remote.team)?remote.team:defaultData.team,
+      projects:Array.isArray(remote.projects)?remote.projects:defaultData.projects,
+      tasks:Array.isArray(remote.tasks)?remote.tasks:defaultData.tasks,
+      adhoc:Array.isArray(remote.adhoc)?remote.adhoc:defaultData.adhoc,
+      blockers:Array.isArray(remote.blockers)?remote.blockers:defaultData.blockers
+    };
+    render();
+  }
+},(error)=>{
+  console.error("Firestore 即時同步失敗：",error);
+});
+</script>
+</body>
+</html>

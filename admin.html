@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>人資部儀表板後台</title>
+<style>
+:root{--bg:#f6f8fa;--card:#fff;--text:#263540;--muted:#7d8a95;--line:#e3e9ed;--accent:#7fa893;--accentbg:#eaf3ef}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif}
+.wrap{max-width:1300px;margin:auto;padding:26px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+h1{font-size:24px;margin:0 0 5px}.sub{font-size:12px;color:var(--muted)}a{color:#55636e;text-decoration:none;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 12px;font-size:13px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.tab{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 12px;cursor:pointer}.tab.active{background:var(--accentbg);color:#456958;font-weight:700}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:15px}.card h2{font-size:16px;margin:0 0 14px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}
+label{font-size:12px;color:#6f7d88}input,select,textarea{width:100%;border:1px solid #dce4e8;background:#fff;border-radius:9px;padding:10px;font-size:14px}textarea{min-height:84px;resize:vertical}
+button{border:1px solid #dce4e8;background:#fff;border-radius:9px;padding:9px 12px;cursor:pointer;color:#53616c}.primary{background:#789f8b;color:#fff;border-color:#789f8b}.danger{color:#a25c5c}
+.row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid #eef2f4}.row:last-child{border-bottom:0}.row-main{min-width:0}.title{font-size:13px;font-weight:700}.meta{font-size:11px;color:var(--muted);margin-top:3px}.actions{display:flex;gap:6px;flex-wrap:wrap}.hidden{display:none!important}.savebar{position:sticky;bottom:12px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:18px}.msg{font-size:12px;color:#5d7468}
+@media(max-width:700px){.wrap{padding:14px}.grid{grid-template-columns:1fr}.savebar{align-items:stretch;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><div><h1>人資部儀表板｜後台</h1><div class="sub">Firebase 雲端同步版｜儲存後前台會即時更新。</div></div><a href="index.html">查看前台</a></div>
+<div class="tabs">
+<button class="tab active" data-view="team">團隊狀態</button><button class="tab" data-view="projects">專案</button><button class="tab" data-view="tasks">今日工作</button><button class="tab" data-view="adhoc">臨時交付</button><button class="tab" data-view="blockers">卡關</button>
+</div>
+
+<section id="team" class="view card"><h2>團隊即時狀態</h2><div id="teamEditor"></div></section>
+
+<section id="projects" class="view card hidden">
+<h2>專案管理</h2><div id="projectEditor"></div>
+<div class="card" style="background:#fafbfc;margin-top:14px"><h2>新增專案</h2><form id="projectForm" class="grid">
+<div class="field"><label>專案名稱</label><input name="name" required></div><div class="field"><label>Owner</label><input name="owner" required></div>
+<div class="field"><label>進度 %</label><input name="progress" type="number" min="0" max="100" value="0"></div><div class="field"><label>目前節點</label><input name="current"></div>
+<div class="field full"><label>節點（用逗號分隔）</label><input name="nodes" placeholder="需求確認, 資料盤點, 方案設計, 核准"></div>
+<button class="primary" type="submit">新增專案</button></form></div>
+</section>
+
+<section id="tasks" class="view card hidden"><h2>今日工作</h2><div id="taskEditor"></div><form id="taskForm" class="grid" style="margin-top:16px">
+<div class="field"><label>承辦人</label><select name="person"><option>柔安</option><option>于瑄</option><option>蓁蓁</option><option>昱菱</option></select></div><div class="field"><label>工作名稱</label><input name="title" required></div>
+<div class="field"><label>狀態</label><select name="status"><option>未開始</option><option>進行中</option><option>等待資料</option><option>卡關</option><option>已完成</option></select></div><div class="field"><label>優先度</label><select name="priority"><option>高</option><option>中</option><option>低</option></select></div>
+<button class="primary" type="submit">新增工作</button></form></section>
+
+<section id="adhoc" class="view card hidden"><h2>臨時交付任務</h2><div id="adhocEditor"></div><form id="adhocForm" class="grid" style="margin-top:16px">
+<div class="field"><label>承辦人</label><select name="person"><option>柔安</option><option>于瑄</option><option>蓁蓁</option><option>昱菱</option></select></div><div class="field"><label>任務名稱</label><input name="title" required></div>
+<div class="field"><label>交付人</label><input name="assigner" placeholder="例如：科傑"></div><div class="field"><label>交付時間</label><input name="time" type="time"></div>
+<div class="field full"><label>影響原工作</label><input name="impact" placeholder="例如：影響 2 件原定工作"></div>
+<button class="primary" type="submit">新增臨時任務</button></form></section>
+
+<section id="blockers" class="view card hidden"><h2>卡關事項</h2><div id="blockerEditor"></div><form id="blockerForm" class="grid" style="margin-top:16px">
+<div class="field"><label>負責人</label><select name="person"><option>柔安</option><option>于瑄</option><option>蓁蓁</option><option>昱菱</option></select></div><div class="field"><label>事項</label><input name="title" required></div>
+<div class="field"><label>卡關原因</label><input name="reason"></div><div class="field"><label>等待對象</label><input name="waiting"></div>
+<div class="field"><label>卡關天數</label><input name="days" type="number" min="0" value="1"></div><button class="primary" type="submit">新增卡關</button></form></section>
+
+<div class="savebar"><div id="msg" class="msg">修改後請按「儲存全部」。</div><div><button id="resetBtn">還原示範資料</button> <button id="saveBtn" class="primary">儲存全部</button></div></div>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBjwYdXHp4qTdZKhh4Nd7recLkuQzJlZNs",
+  authDomain: "yl-hr-dashboard.firebaseapp.com",
+  projectId: "yl-hr-dashboard",
+  storageBucket: "yl-hr-dashboard.firebasestorage.app",
+  messagingSenderId: "563879035782",
+  appId: "1:563879035782:web:77f8fd059b23efb633e207"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const dashboardRef = doc(db, "dashboard", "main");
+
+const defaultData={
+ team:[{name:"柔安",role:"經理",status:"勿擾",focus:"薪酬制度確認",load:72},{name:"于瑄",role:"組長",status:"可討論",focus:"8月薪資調整",load:92},{name:"蓁蓁",role:"人資專員",status:"會議中",focus:"保費資料整理",load:68},{name:"昱菱",role:"人資專員",status:"可討論",focus:"人事基本資料",load:55}],
+ projects:[{id:"salary",name:"薪酬暨獎金制度重整",owner:"于瑄",progress:42,status:"正常",current:"現況分析",nodes:["資料盤點","現況分析","Pay Philosophy","方案設計","Policy V1.0"],start:"2026/09",end:"2027/12",gantt:[["人事基本資料整理",0,2,"done"],["Job Validation / Family",1,3,"done"],["薪資與津貼盤點",0,3,"done"],["現況薪酬問題分析",2,4,"current"],["Pay Philosophy 決策",4,5,"future"],["Salary / Bonus 方案",5,7,"future"],["Policy V1.0",7,8,"future"]]},{id:"performance",name:"115年度績效考核",owner:"柔安",progress:61,status:"注意",current:"系統調整",nodes:["表單確認","流程設計","系統調整","主管溝通","正式執行"],start:"2026/07",end:"2026/12",gantt:[["表單確認",0,2,"done"],["流程設計",1,3,"done"],["系統調整",2,5,"current"],["主管溝通",5,6,"future"],["正式執行",6,8,"future"]]}],
+ tasks:[{person:"于瑄",title:"8月薪資調整",status:"進行中",priority:"高"},{person:"于瑄",title:"整理各單位面試人選",status:"等待資料",priority:"中"},{person:"柔安",title:"薪酬制度確認",status:"進行中",priority:"高"},{person:"蓁蓁",title:"保費資料整理",status:"進行中",priority:"中"},{person:"昱菱",title:"人事基本資料整理",status:"進行中",priority:"中"}],
+ adhoc:[{title:"整理經營主管面試單位與現有人數",person:"于瑄",assigner:"科傑",time:"10:32",impact:"影響 2 件原定工作"},{title:"高雄品管面試補充資料",person:"于瑄",assigner:"柔安",time:"13:15",impact:"預估占用 1 HR"}],
+ blockers:[{title:"各單位面試人數整理",person:"于瑄",reason:"缺少最新人數資料",waiting:"各單位",days:1},{title:"ISO 文件盤點",person:"蓁蓁",reason:"部分文件尚未提供",waiting:"相關單位",days:3},{title:"專案PM招募",person:"柔安",reason:"候選人不足",waiting:"招募端",days:4}]
+};
+let data=structuredClone(defaultData);
+
+const teamEditor=document.getElementById("teamEditor");
+const projectEditor=document.getElementById("projectEditor");
+const taskEditor=document.getElementById("taskEditor");
+const adhocEditor=document.getElementById("adhocEditor");
+const blockerEditor=document.getElementById("blockerEditor");
+const projectForm=document.getElementById("projectForm");
+const taskForm=document.getElementById("taskForm");
+const adhocForm=document.getElementById("adhocForm");
+const blockerForm=document.getElementById("blockerForm");
+const saveBtn=document.getElementById("saveBtn");
+const resetBtn=document.getElementById("resetBtn");
+const msg=document.getElementById("msg");
+
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+function render(){
+ teamEditor.innerHTML=data.team.map((p,i)=>`<div class="row"><div class="row-main"><div class="title">${esc(p.name)}｜${esc(p.role)}</div><div class="grid" style="margin-top:8px"><div class="field"><label>狀態</label><select data-team-status="${i}"><option ${p.status==="可討論"?"selected":""}>可討論</option><option ${p.status==="勿擾"?"selected":""}>勿擾</option><option ${p.status==="會議中"?"selected":""}>會議中</option><option ${p.status==="休假"?"selected":""}>休假</option><option ${p.status==="暫時離開"?"selected":""}>暫時離開</option></select></div><div class="field"><label>今日重點</label><input data-team-focus="${i}" value="${esc(p.focus)}"></div><div class="field"><label>工作負載 %</label><input data-team-load="${i}" type="number" min="0" max="100" value="${p.load}"></div></div></div></div>`).join("");
+ projectEditor.innerHTML=data.projects.map((p,i)=>`<div class="row"><div class="row-main"><div class="title">${esc(p.name)}</div><div class="meta">Owner ${esc(p.owner)} · ${p.progress}% · 目前：${esc(p.current)}</div></div><div class="actions"><button class="danger" data-del-project="${i}">刪除</button></div></div>`).join("");
+ taskEditor.innerHTML=data.tasks.map((x,i)=>row(x.title,`${x.person} · ${x.status} · ${x.priority}優先`,"task",i)).join("");
+ adhocEditor.innerHTML=data.adhoc.map((x,i)=>row(x.title,`${x.person} · 交付 ${x.assigner} · ${x.time} · ${x.impact}`,"adhoc",i)).join("");
+ blockerEditor.innerHTML=data.blockers.map((x,i)=>row(x.title,`${x.person} · ${x.reason} · 等待 ${x.waiting} · ${x.days}天`,"blocker",i)).join("");
+ bindDeletes();
+}
+function row(title,meta,type,i){return `<div class="row"><div class="row-main"><div class="title">${esc(title)}</div><div class="meta">${esc(meta)}</div></div><button class="danger" data-del-${type}="${i}">刪除</button></div>`}
+function bindDeletes(){
+ document.querySelectorAll("[data-del-project]").forEach(b=>b.onclick=()=>{data.projects.splice(+b.dataset.delProject,1);render()});
+ document.querySelectorAll("[data-del-task]").forEach(b=>b.onclick=()=>{data.tasks.splice(+b.dataset.delTask,1);render()});
+ document.querySelectorAll("[data-del-adhoc]").forEach(b=>b.onclick=()=>{data.adhoc.splice(+b.dataset.delAdhoc,1);render()});
+ document.querySelectorAll("[data-del-blocker]").forEach(b=>b.onclick=()=>{data.blockers.splice(+b.dataset.delBlocker,1);render()});
+}
+function syncTeam(){data.team.forEach((p,i)=>{p.status=document.querySelector(`[data-team-status="${i}"]`).value;p.focus=document.querySelector(`[data-team-focus="${i}"]`).value;p.load=Math.max(0,Math.min(100,+document.querySelector(`[data-team-load="${i}"]`).value||0))})}
+document.querySelectorAll(".tab").forEach(btn=>btn.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));btn.classList.add("active");document.querySelectorAll(".view").forEach(x=>x.classList.add("hidden"));document.getElementById(btn.dataset.view).classList.remove("hidden")});
+projectForm.onsubmit=e=>{e.preventDefault();syncTeam();const f=new FormData(e.target),name=f.get("name").trim();if(!name)return;data.projects.push({id:"p"+Date.now(),name,owner:f.get("owner").trim(),progress:Math.max(0,Math.min(100,+f.get("progress")||0)),status:"正常",current:f.get("current").trim(),nodes:f.get("nodes").split(",").map(x=>x.trim()).filter(Boolean),start:"",end:"",gantt:[]});e.target.reset();render()};
+taskForm.onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);data.tasks.push(Object.fromEntries(f));e.target.reset();render()};
+adhocForm.onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);data.adhoc.push(Object.fromEntries(f));e.target.reset();render()};
+blockerForm.onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);data.blockers.push({title:f.get("title"),person:f.get("person"),reason:f.get("reason"),waiting:f.get("waiting"),days:+f.get("days")||0});e.target.reset();render()};
+saveBtn.onclick=async()=>{
+  syncTeam();
+  saveBtn.disabled=true;
+  msg.textContent="正在儲存到 Firebase…";
+  try{
+    await setDoc(dashboardRef,{...data,updatedAt:serverTimestamp()});
+    msg.textContent="已儲存到 Firebase，前台會即時更新。";
+  }catch(error){
+    console.error(error);
+    msg.textContent="儲存失敗："+error.message;
+  }finally{
+    saveBtn.disabled=false;
+  }
+};
+resetBtn.onclick=async()=>{
+  if(!confirm("確定要將雲端資料還原成示範資料嗎？")) return;
+  data=structuredClone(defaultData);
+  render();
+  msg.textContent="已載入示範資料，按「儲存全部」後才會覆蓋 Firebase。";
+};
+
+async function loadFromFirebase(){
+  msg.textContent="正在讀取 Firebase…";
+  try{
+    const snap=await getDoc(dashboardRef);
+    if(snap.exists()){
+      const remote=snap.data();
+      data={
+        team:Array.isArray(remote.team)?remote.team:defaultData.team,
+        projects:Array.isArray(remote.projects)?remote.projects:defaultData.projects,
+        tasks:Array.isArray(remote.tasks)?remote.tasks:defaultData.tasks,
+        adhoc:Array.isArray(remote.adhoc)?remote.adhoc:defaultData.adhoc,
+        blockers:Array.isArray(remote.blockers)?remote.blockers:defaultData.blockers
+      };
+      msg.textContent="已載入 Firebase 資料。";
+    }else{
+      msg.textContent="Firebase 尚無資料；目前顯示示範資料，按「儲存全部」即可建立第一筆資料。";
+    }
+  }catch(error){
+    console.error(error);
+    msg.textContent="Firebase 讀取失敗："+error.message;
+  }
+  render();
+}
+loadFromFirebase();
+</script>
+</body>
+</html>
